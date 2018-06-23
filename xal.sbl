@@ -1,0 +1,279 @@
+/* Stemmer for Kalmyk
+		* author: Badma Ontaev
+		* e-mail: ontaev@gmail.com
+		* version: 0.1
+*/
+
+stringescapes { }
+
+/* Kalmyk alphabet in Unicode 
+
+	a' - ә, g' - һ, zh' - җ, n' - ң, o' - ө, u' - ү
+
+*/
+
+stringdef a    hex '430'
+stringdef a'   hex '4D9'
+stringdef b    hex '431'
+stringdef v    hex '432'
+stringdef g    hex '433'
+stringdef g'   hex '4BB'
+stringdef d    hex '434'
+stringdef e    hex '435'
+stringdef zh   hex '436'
+stringdef zh'  hex '497'
+stringdef z    hex '437'
+stringdef i    hex '438'
+stringdef i'   hex '439'
+stringdef k    hex '43A'
+stringdef l    hex '43B'
+stringdef m    hex '43C'
+stringdef n    hex '43D'
+stringdef n'   hex '4A3'
+stringdef o    hex '43E'
+stringdef o'   hex '4E9'
+stringdef p    hex '43F'
+stringdef r    hex '440'
+stringdef s    hex '441'
+stringdef t    hex '442'
+stringdef u    hex '443'
+stringdef u'   hex '4AF'
+stringdef f    hex '444'
+stringdef kh   hex '445'
+stringdef ts   hex '446'
+stringdef ch   hex '447'
+stringdef sh   hex '448'
+stringdef shch hex '449'
+stringdef tv   hex '44A'
+stringdef y    hex '44B'
+stringdef mya  hex '44C'
+stringdef e'   hex '44D'
+stringdef iu   hex '44E'
+stringdef ia   hex '44F'
+
+externals (stem)
+
+/* integers (p1) */
+groupings (vowel)
+
+routines (
+ 
+	noun_possessive
+    noun_impersonal_possessive
+	noun
+    noun_double_declination
+	noun_plural
+    verb_number_person
+    verb_tense_mood
+    verb_stem
+)
+
+define vowel '{a}{e}{i}{o}{u}{y}{e'}{iu}{ia}{a'}{o'}{u'}'
+
+
+backwardmode (
+
+
+/*---------------------------------NOUN----------------------------------------*/
+
+    /* Case suffixes */
+
+    define noun as (
+    	[substring] among (
+    		'{n}{a}' (<-'{n}')
+    		'{n}{a'}' (<-'{n}')
+    		
+    		'{n'}{g}{i}{n}' (<-'{n'}') 
+    		
+    		'{g'}{i}{n}' (
+    			test vowel delete
+    			test substring among (
+    				'{a}{a}' '{e}{e}' '{i}{i}' '{o}{o}' '{u}{u}' '{y}{y}' '{e'}{e'}' '{iu}{iu}' '{ia}{ia}' '{a'}{a'}' '{o'}{o'}' '{u'}{u'}'	([next] delete)
+    				)
+    			)	
+
+    		'{n'}{g}{i}{g}' (<-'{n'}')
+    		
+
+    		
+    		'{n'}{g}{a}{r}' '{n'}{g}{a'}{r}' (<-'{n'}')
+    		'{g'}{a}{r}' '{g'}{a'}{r}' (
+    			test vowel delete
+    			test substring among (
+    				'{a}{a}' '{e}{e}' '{i}{i}' '{o}{o}' '{u}{u}' '{y}{y}' '{e'}{e'}' '{iu}{iu}' '{ia}{ia}' '{a'}{a'}' '{o'}{o'}' '{u'}{u'}'	([next] delete)
+    				)
+    			)
+
+    		'{n'}{g}{a}{s}' '{n'}{g}{a'}{s}' (<-'{n'}')
+    		'{g'}{a}{s}' '{g'}{a'}{s}' (
+    			test vowel delete
+    			test substring among (
+    				'{a}{a}' '{e}{e}' '{i}{i}' '{o}{o}' '{u}{u}' '{y}{y}' '{e'}{e'}' '{iu}{iu}' '{ia}{ia}' '{a'}{a'}' '{o'}{o'}' '{u'}{u'}'	([next] delete)
+    				)
+    			)
+
+    		
+ 	  		'{n'}{g}{u}{r}' '{n'}{g}{u'}{r}' (<-'{n'}')
+    		'{g'}{u}{r}' '{g'}{u'}{r}' (
+    			test vowel delete
+    			test substring among (
+    				'{a}{a}' '{e}{e}' '{i}{i}' '{o}{o}' '{u}{u}' '{y}{y}' '{e'}{e'}' '{iu}{iu}' '{ia}{ia}' '{a'}{a'}' '{o'}{o'}' '{u'}{u'}'	([next] delete)
+    				)
+    			) 
+
+    		
+    		'{i}{n}' '{y}{n}' '{t}' '{i}{g}' '{y}{g}' '{a}{r}' '{a'}{r}' '{u}{r}' '{u'}{r}' '{l}{a}' '{l}{a'}' '{t}{a}' '{t}{a'}' '{a}{s}' '{a'}{s}'
+    		(hop 2 delete)
+            '{d}' (
+                test not substring among (
+                    '{n'}{g}{u}' '{n'}{g}{u'}' '{g}{u}' '{g}{u'}' '{k}{u}' '{k}{u'}' '{m}{u}' '{m}{u'}'
+                    ()
+                )
+                (delete)
+            )
+    		'{n}' (test (vowel and hop 3) delete)
+    		'{g}' (
+    			test (vowel and hop 3) delete
+    			test substring among (
+    				'{a}{a}' '{e}{e}' '{i}{i}' '{o}{o}' '{u}{u}' '{y}{y}' '{e'}{e'}' '{iu}{iu}' '{ia}{ia}' '{a'}{a'}' '{o'}{o'}' '{u'}{u'}'	([next] delete)
+    				)
+    			)
+    	)
+    )
+
+    /* Plural suffixes */
+
+    define noun_plural as (
+    	[substring] among (
+            '{n'}{g}{u}{d}' '{n'}{g}{u'}{d}' (<-'{n'}') 
+            '{g}{u}{d}' '{g}{u'}{d}' (<-'{g}')
+            '{k}{u}{d}' '{k}{u'}{d}' (<-'{k}')
+    		'{m}{u}{d}' '{m}{u'}{d}' '{u}{d}' '{u'}{d}' '{n}{r}' '{s}'
+    		(delete)
+    	)
+
+    )
+
+    /* Possessive: suffixes pointing on subject belonging (my, your, his/her, our etc) */
+
+    define noun_possessive as (
+    	[substring] among (
+            '{n}{mya}' (
+                test not substring among (
+                    '{a}{n}' '{a'}{n}' '{i}{n}' '{y}{n}'
+                    ()        
+                )
+                (delete)
+            )
+
+    		'{m}' '{ch}{n}' '{t}{n}' '{m}{d}{n}'
+    		(delete) 
+    	)
+    )
+
+    /* Impersonal possessive: suffixes pointing on subject belonging without personality */
+
+    define noun_impersonal_possessive as (
+        [substring] among (
+            '{n}{n}{mya}' (
+                test substring among (
+                    '{a}' '{a'}' (delete)
+                    '{i}' '{y}' (<- '{n}')
+                )
+            )
+
+            '{a}{n}' '{a'}{n}' (
+                (delete)
+                test '{g'}' ([next] delete)        
+            ) 
+
+            '{r}{n}' (
+                test substring among (
+                    '{l}{a}' '{l}{a'}' (delete) 
+                    '{a}' '{a'}' '{u}' '{u'}' (<- '{r}')
+                ) 
+            )  
+            '{a}{s}{n}' (<- '{a}{s}') 
+            '{a'}{s}{n}' (<- '{a'}{s}')
+        )
+    )
+
+    /* Double declination: noun in genitive and connective cases can additionally change by case.
+
+        On this step we just detach genitive and connective suffixes after "noun" step
+
+    */
+
+    define noun_double_declination as (
+        [substring] among (
+            '{n}{a}' (<-'{n}')
+            '{n}{a'}' (<-'{n}')
+            
+            '{n'}{g}{i}{n}' (<-'{n'}') 
+            
+            '{g'}{i}{n}' (
+                test vowel delete
+                test substring among (
+                    '{a}{a}' '{e}{e}' '{i}{i}' '{o}{o}' '{u}{u}' '{y}{y}' '{e'}{e'}' '{iu}{iu}' '{ia}{ia}' '{a'}{a'}' '{o'}{o'}' '{u'}{u'}' ([next] delete)
+                    )
+                )
+
+            '{t}{a}' '{t}{a'}' (hop 2 delete)
+
+        )
+    )
+
+/*---------------------------------VERB----------------------------------------*/
+
+
+    
+    define verb_number_person as (
+        [substring] among (
+            '{v}' '{v}{i}{d}{n}' (
+                (delete)
+                test substring among ('{u}' '{u'}' ([next] delete))
+            )
+            '{ch}' '{t}' 
+            (delete)
+        ) 
+    )
+    define verb_tense_mood as (
+        [substring] among (
+            '{zh'}{a}{n}{a}' '{zh'}{a'}{n}{a'}' '{ch}{a}{n}{a}' '{n}{a}' '{n}{a'}' '{a}' '{a'}' '{v}' '{l}{a}' '{l}{a'}' '{zh'}' '{ch}' '{s}{n}' '{s}{m}{n}' (delete)
+            '{t}{n}' '{i}{i'}' '{i}{ia}' '{i'}' '{s}{a}' '{s}{a'}' '{s}{u}' '{s}{u'}' '{s}' '{g}' '{t}{kh}{a}' '{t}{kh}{a'}' '{v}{z}{a}' '{v}{z}{a'}' (delete) 
+        )
+    )
+
+    define verb_stem as (
+        [substring] among (
+            '{g}{d}' '{u}{l}' '{u'}{l}' '{l}{g'}' '{l}{ts}' '{l}{d}' '{a}' '{a'}' /* verb voice (for example passive '{g}{d}')*/
+            '{ch}{k}' '{zh'}{a}' '{zh'}{a'}' '{ts}{kh}{a}' '{ts}{kh}{a'}' /* verb view (for example complete view '{ch}{k}')*/
+            (delete)
+            '{r}{g}' (<- '{r}') 
+            '{d}{kh}' (<- '{d}')
+            '{s}{k}' (<- '{s}')
+        )
+    )
+
+
+
+
+
+
+)
+
+define stem as (
+	
+	backwards(
+		
+        do noun_possessive	
+        do noun_impersonal_possessive	
+        do noun
+        do noun_double_declination
+		do noun_plural
+        do verb_number_person
+        do verb_tense_mood
+        do verb_stem
+        
+	)
+)
