@@ -1,4 +1,4 @@
-/* Stemmer for Kalmyk
+ /* Stemmer for Kalmyk
 		* author: Badma Ontaev
 		* e-mail: ontaev@gmail.com
 		* version: 0.1
@@ -66,6 +66,7 @@ routines (
     verb_number_person
     verb_tense_mood
     verb_stem
+    gerund
 )
 
 define vowel '{a}{e}{i}{o}{u}{y}{e'}{iu}{ia}{a'}{o'}{u'}'
@@ -121,9 +122,16 @@ backwardmode (
     				)
     			) 
 
-    		
-    		'{i}{n}' '{y}{n}' '{t}' '{i}{g}' '{y}{g}' '{a}{r}' '{a'}{r}' '{u}{r}' '{u'}{r}' '{l}{a}' '{l}{a'}' '{t}{a}' '{t}{a'}' '{a}{s}' '{a'}{s}'
+    		'{a}{r}' '{a'}{r}' '{l}{a}' '{l}{a'}' (
+                /* Exclude gerund affixes */                
+                test not substring among ('{kh}' ())
+                (hop 2 delete)
+            ) 
+
+
+    		'{i}{n}' '{y}{n}' '{t}' '{i}{g}' '{y}{g}' '{u}{r}' '{u'}{r}' '{t}{a}' '{t}{a'}' '{a}{s}' '{a'}{s}'
     		(hop 2 delete)
+
             '{d}' (
                 test not substring among (
                     '{n'}{g}{u}' '{n'}{g}{u'}' '{g}{u}' '{g}{u'}' '{k}{u}' '{k}{u'}' '{m}{u}' '{m}{u'}'
@@ -239,14 +247,38 @@ backwardmode (
     )
     define verb_tense_mood as (
         [substring] among (
-            '{zh'}{a}{n}{a}' '{zh'}{a'}{n}{a'}' '{ch}{a}{n}{a}' '{n}{a}' '{n}{a'}' '{a}' '{a'}' '{v}' '{l}{a}' '{l}{a'}' '{zh'}' '{ch}' '{s}{n}' '{s}{m}{n}' (delete)
-            '{t}{n}' '{i}{i'}' '{i}{ia}' '{i'}' '{s}{a}' '{s}{a'}' '{s}{u}' '{s}{u'}' '{s}' '{g}' '{t}{kh}{a}' '{t}{kh}{a'}' '{v}{z}{a}' '{v}{z}{a'}' (delete) 
+            
+            '{l}{a}' '{l}{a'}' (
+                /* Exclude gerund affixes */                
+                test not substring among ('{kh}' ())
+                (delete)
+            )
+            '{a}' '{a'}' (
+                /* Exclude gerund affixes */                
+                test not substring among ('{s}{a}{r}' '{s}{a'}{r}'())
+                (delete)
+            )
+            '{g}' (
+                /* Exclude gerund affixes */                
+                test not substring among ('{d}' ())
+                (delete)
+            )
+
+            '{zh'}{a}{n}{a}' '{zh'}{a'}{n}{a'}' '{ch}{a}{n}{a}' '{n}{a}' '{n}{a'}' '{v}' '{zh'}' '{ch}' '{s}{n}' '{s}{m}{n}' (delete)
+
+            '{t}{n}' '{i}{i'}' '{i}{ia}' '{i'}' '{s}{a}' '{s}{a'}' '{s}{u}' '{s}{u'}' '{s}' '{t}{kh}{a}' '{t}{kh}{a'}' '{v}{z}{a}' '{v}{z}{a'}' (delete) 
         )
     )
 
     define verb_stem as (
         [substring] among (
-            '{g}{d}' '{u}{l}' '{u'}{l}' '{l}{g'}' '{l}{ts}' '{l}{d}' '{a}' '{a'}' /* verb voice (for example passive '{g}{d}')*/
+
+            '{a}' '{a'}' (
+                /* Exclude gerund affixes */                
+                test not substring among ('{kh}{l}' '{s}{a}{r}' '{s}{a'}{r}'())
+                (delete)
+            )
+            '{g}{d}' '{u}{l}' '{u'}{l}' '{l}{g'}' '{l}{ts}' '{l}{d}' /* verb voice (for example passive '{g}{d}')*/
             '{ch}{k}' '{zh'}{a}' '{zh'}{a'}' '{ts}{kh}{a}' '{ts}{kh}{a'}' /* verb view (for example complete view '{ch}{k}')*/
             (delete)
             '{r}{g}' (<- '{r}') 
@@ -255,7 +287,12 @@ backwardmode (
         )
     )
 
+    define gerund as (
+        [substring] among (
+            '{kh}{l}{a}' '{kh}{l}{a'}' '{kh}{l}{a}{r}{n}' '{kh}{l}{a'}{r}{n}' '{kh}{a}{r}' '{kh}{a'}{r}' '{a}{d}' '{a'}{d}' '{t}{l}' '{s}{a}{r}{a}' '{s}{a'}{r}{a'}' '{v}{ch}{n}' '{s}{n}' '{g}{ch}' '{d}{g}'(delete)
 
+        )
+    )
 
 
 
@@ -274,6 +311,6 @@ define stem as (
         do verb_number_person
         do verb_tense_mood
         do verb_stem
-        
+        do gerund
 	)
 )
