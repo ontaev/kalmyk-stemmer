@@ -3,7 +3,7 @@
     #include <string.h> /* for memmove */
 
     #include "api.h"
-    #include "xal.h"
+    #include "kalmyk_UTF_8.h"
 
 
     /* This derives from the source file driver.template */
@@ -12,11 +12,11 @@
 
        Following compilation with
 
-           gcc -o X_prog xal/*.c
+           gcc -o kalmyk_UTF_8_prog xal/*.c
 
        The command line syntax is
 
-           ./X_prog file [-o[utput] file] -h[elp]]
+           ./kalmyk_UTF_8_prog file [-o[utput] file] -h[elp]]
 
        The first argument gives the input file, which consists of a list of words
        to be stemmed, one per line. (Words must be in lower case.) If omitted, stdin
@@ -51,7 +51,7 @@
                 }
 
                 SN_set_current(z, i, b);
-                X_stem(z);
+                kalmyk_UTF_8_stem(z);
                 {
                     int j;
                     for (j = 0; j < z->l; j++) fprintf(f_out, "%c", z->p[j]);
@@ -102,7 +102,7 @@
         /* initialise the stemming process: */
 
         {
-            struct SN_env * z = X_create_env();
+            struct SN_env * z = kalmyk_UTF_8_create_env();
             FILE * f_in;
             FILE * f_out;
             f_in = in == 0 ? stdin : fopen(in, "r");
@@ -114,7 +114,7 @@
                 fprintf(stderr, "file %s cannot be opened\n", out); exit(1);
             }
             stem_file(z, f_in, f_out);
-            X_close_env(z);
+            kalmyk_UTF_8_close_env(z);
         }
 
         return 0;

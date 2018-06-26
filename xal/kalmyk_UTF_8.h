@@ -5,10 +5,10 @@
 extern "C" {
 #endif
 
-extern struct SN_env * X_create_env(void);
-extern void X_close_env(struct SN_env * z);
+extern struct SN_env * kalmyk_UTF_8_create_env(void);
+extern void kalmyk_UTF_8_close_env(struct SN_env * z);
 
-extern int X_stem(struct SN_env * z);
+extern int kalmyk_UTF_8_stem(struct SN_env * z);
 
 #ifdef __cplusplus
 }

@@ -15,7 +15,7 @@ static int r_noun_possessive(struct SN_env * z);
 #ifdef __cplusplus
 extern "C" {
 #endif
-extern int X_stem(struct SN_env * z);
+extern int kalmyk_UTF_8_stem(struct SN_env * z);
 #ifdef __cplusplus
 }
 #endif
@@ -24,8 +24,8 @@ extern "C" {
 #endif
 
 
-extern struct SN_env * X_create_env(void);
-extern void X_close_env(struct SN_env * z);
+extern struct SN_env * kalmyk_UTF_8_create_env(void);
+extern void kalmyk_UTF_8_close_env(struct SN_env * z);
 
 
 #ifdef __cplusplus
@@ -1277,7 +1277,7 @@ static int r_gerund(struct SN_env * z) { /* backwardmode */
     return 1;
 }
 
-extern int X_stem(struct SN_env * z) { /* forwardmode */
+extern int kalmyk_UTF_8_stem(struct SN_env * z) { /* forwardmode */
     z->lb = z->c; z->c = z->l; /* backwards, line 304 */
 
     {   int m1 = z->l - z->c; (void)m1; /* do, line 306 */
@@ -1356,7 +1356,7 @@ extern int X_stem(struct SN_env * z) { /* forwardmode */
     return 1;
 }
 
-extern struct SN_env * X_create_env(void) { return SN_create_env(0, 0, 0); }
+extern struct SN_env * kalmyk_UTF_8_create_env(void) { return SN_create_env(0, 0, 0); }
 
-extern void X_close_env(struct SN_env * z) { SN_close_env(z, 0); }
+extern void kalmyk_UTF_8_close_env(struct SN_env * z) { SN_close_env(z, 0); }
 
