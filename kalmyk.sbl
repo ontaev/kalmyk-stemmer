@@ -87,9 +87,13 @@ backwardmode (
             '{n'}{g}{u}{d}' '{n'}{g}{u'}{d}' (<-'{n'}') 
             '{g}{u}{d}' '{g}{u'}{d}' (<-'{g}')
             '{k}{u}{d}' '{k}{u'}{d}' (<-'{k}')
-    		'{m}{u}{d}' '{m}{u'}{d}' '{d}{u}{d}' '{d}{u'}{d}' '{ch}{u}{d}' '{ch}{u'}{d}' '{u}{d}' '{u'}{d}' '{n}{r}' 
-    		(delete)
-            
+    		'{m}{u}{d}' '{m}{u'}{d}' '{d}{u}{d}' '{d}{u'}{d}' '{ch}{u}{d}' '{ch}{u'}{d}' '{u}{d}' '{u'}{d}' (delete)
+            '{n}{r}' (
+                (delete)
+                test substring among (
+                    '{a}{ch}' '{a'}{ch}' ([hop 2] delete)
+                )
+            )
     	)
 
     )
