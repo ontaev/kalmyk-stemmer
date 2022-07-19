@@ -67,6 +67,7 @@ routines (
     verb_number_person
     verb_tense_mood
     verb_stem
+    verb_particles
     gerund
 )
 
@@ -82,11 +83,11 @@ backwardmode (
 
     define noun_plural as (
     	[substring] among (
-            '{s}' (test vowel delete)
+            '{s}' (test vowel hop 3 delete)
             '{n'}{g}{u}{d}' '{n'}{g}{u'}{d}' (<-'{n'}') 
             '{g}{u}{d}' '{g}{u'}{d}' (<-'{g}')
             '{k}{u}{d}' '{k}{u'}{d}' (<-'{k}')
-    		'{m}{u}{d}' '{m}{u'}{d}' '{d}{u}{d}' '{d}{u'}{d}' '{u}{d}' '{u'}{d}' '{n}{r}' 
+    		'{m}{u}{d}' '{m}{u'}{d}' '{d}{u}{d}' '{d}{u'}{d}' '{ch}{u}{d}' '{ch}{u'}{d}' '{u}{d}' '{u'}{d}' '{n}{r}' 
     		(delete)
             
     	)
@@ -221,7 +222,7 @@ backwardmode (
 
             '{d}' (
                 test not substring among (
-                    '{n'}{g}{u}' '{n'}{g}{u'}' '{g}{u}' '{g}{u'}' '{k}{u}' '{k}{u'}' '{m}{u}' '{m}{u'}' '{d}{u}' '{d}{u'}'
+                    '{n'}{g}{u}' '{n'}{g}{u'}' '{g}{u}' '{g}{u'}' '{k}{u}' '{k}{u'}' '{m}{u}' '{m}{u'}' '{d}{u}' '{d}{u'}' '{ch}{u}' '{ch}{u'}'
                     ()
                 )
                 (delete)
@@ -247,7 +248,27 @@ backwardmode (
 /*---------------------------------VERB----------------------------------------*/
 
 
-    
+    define verb_particles as (
+        [substring] among (
+            '{m}{n}' (
+                (delete)
+                test substring among ('{s}' '{d}' '{kh}'([next] delete))
+            )
+            '{g}{o}' (
+                (delete)
+                test substring among ('{d}' '{sh}' '{l}'([next] delete))
+            )
+            '{kh}{sh}' (
+                (delete)
+            )
+            '{kh}{n}{mya}'(
+                (hop 3 delete)
+            )
+            '{kh}{i}{n}{mya}'(
+                (hop 3 delete)
+            )
+        )
+    )
     define verb_number_person as (
         [substring] among (
             '{v}' '{v}{i}{d}{n}' (
@@ -286,15 +307,16 @@ backwardmode (
     )
 
     define verb_stem as (
+        try verb_particles
         try verb_number_person
         try verb_tense_mood
         [substring] among (
 
-            '{a}' '{a'}' (
-                /* Exclude gerund affixes */                
-                test not substring among ('{kh}{l}' '{s}{a}{r}' '{s}{a'}{r}'())
-                (delete)
-            )
+            // '{a}' '{a'}' (
+            //     /* Exclude gerund affixes */                
+            //     test not substring among ('{kh}{l}' '{s}{a}{r}' '{s}{a'}{r}'())
+            //     (delete)
+            // )
             '{g}{d}' '{u}{l}' '{u'}{l}' '{l}{g'}' '{l}{ts}' '{l}{d}' /* verb voice (for example passive '{g}{d}')*/
             '{ch}{k}' '{zh'}{a}' '{zh'}{a'}' '{ts}{kh}{a}' '{ts}{kh}{a'}' /* verb view (for example complete view '{ch}{k}')*/
             (delete)
@@ -306,6 +328,7 @@ backwardmode (
 
     define gerund as (
         [substring] among (
+            '{g'}{a}{d}' '{g'}{a'}{d}' (test vowel (delete))
             '{kh}{l}{a}' '{kh}{l}{a'}' '{kh}{l}{a}{r}{n}' '{kh}{l}{a'}{r}{n}' '{kh}{a}{r}' '{kh}{a'}{r}' '{a}{d}' '{a'}{d}' '{t}{l}' '{s}{a}{r}{a}' '{s}{a'}{r}{a'}' '{g}{ch}' '{d}{g}'(delete)
             '{s}{n}' '{v}{ch}{n}' (test not vowel (delete))
 
