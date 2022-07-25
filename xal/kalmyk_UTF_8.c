@@ -530,61 +530,59 @@ static const struct among a_23[1] =
 { 2, s_23_0, -1, -1, 0}
 };
 
-static const symbol s_24_0[2] = { 0xD1, 0x81 };
-static const symbol s_24_1[4] = { 0xD1, 0x81, 0xD1, 0x83 };
-static const symbol s_24_2[2] = { 0xD1, 0x85 };
-static const symbol s_24_3[2] = { 0xD1, 0x87 };
-static const symbol s_24_4[4] = { 0xD0, 0xB8, 0xD1, 0x8F };
-static const symbol s_24_5[2] = { 0xD2, 0x97 };
-static const symbol s_24_6[4] = { 0xD1, 0x81, 0xD3, 0x99 };
-static const symbol s_24_7[6] = { 0xD1, 0x82, 0xD1, 0x85, 0xD3, 0x99 };
-static const symbol s_24_8[6] = { 0xD0, 0xB2, 0xD0, 0xB7, 0xD3, 0x99 };
-static const symbol s_24_9[4] = { 0xD0, 0xBB, 0xD3, 0x99 };
-static const symbol s_24_10[4] = { 0xD0, 0xBD, 0xD3, 0x99 };
-static const symbol s_24_11[8] = { 0xD2, 0x97, 0xD3, 0x99, 0xD0, 0xBD, 0xD3, 0x99 };
-static const symbol s_24_12[4] = { 0xD1, 0x81, 0xD2, 0xAF };
-static const symbol s_24_13[4] = { 0xD1, 0x81, 0xD0, 0xB0 };
-static const symbol s_24_14[6] = { 0xD1, 0x82, 0xD1, 0x85, 0xD0, 0xB0 };
-static const symbol s_24_15[6] = { 0xD0, 0xB2, 0xD0, 0xB7, 0xD0, 0xB0 };
-static const symbol s_24_16[4] = { 0xD0, 0xBB, 0xD0, 0xB0 };
-static const symbol s_24_17[4] = { 0xD0, 0xBD, 0xD0, 0xB0 };
-static const symbol s_24_18[8] = { 0xD1, 0x87, 0xD0, 0xB0, 0xD0, 0xBD, 0xD0, 0xB0 };
-static const symbol s_24_19[8] = { 0xD2, 0x97, 0xD0, 0xB0, 0xD0, 0xBD, 0xD0, 0xB0 };
-static const symbol s_24_20[2] = { 0xD0, 0xB2 };
-static const symbol s_24_21[2] = { 0xD0, 0xB9 };
-static const symbol s_24_22[4] = { 0xD0, 0xB8, 0xD0, 0xB9 };
-static const symbol s_24_23[4] = { 0xD1, 0x81, 0xD0, 0xBD };
-static const symbol s_24_24[4] = { 0xD1, 0x82, 0xD0, 0xBD };
-static const symbol s_24_25[6] = { 0xD1, 0x81, 0xD0, 0xBC, 0xD0, 0xBD };
+static const symbol s_24_0[4] = { 0xD1, 0x81, 0xD1, 0x83 };
+static const symbol s_24_1[2] = { 0xD1, 0x85 };
+static const symbol s_24_2[2] = { 0xD1, 0x87 };
+static const symbol s_24_3[4] = { 0xD0, 0xB8, 0xD1, 0x8F };
+static const symbol s_24_4[2] = { 0xD2, 0x97 };
+static const symbol s_24_5[4] = { 0xD1, 0x81, 0xD3, 0x99 };
+static const symbol s_24_6[6] = { 0xD1, 0x82, 0xD1, 0x85, 0xD3, 0x99 };
+static const symbol s_24_7[6] = { 0xD0, 0xB2, 0xD0, 0xB7, 0xD3, 0x99 };
+static const symbol s_24_8[4] = { 0xD0, 0xBB, 0xD3, 0x99 };
+static const symbol s_24_9[4] = { 0xD0, 0xBD, 0xD3, 0x99 };
+static const symbol s_24_10[8] = { 0xD2, 0x97, 0xD3, 0x99, 0xD0, 0xBD, 0xD3, 0x99 };
+static const symbol s_24_11[4] = { 0xD1, 0x81, 0xD2, 0xAF };
+static const symbol s_24_12[4] = { 0xD1, 0x81, 0xD0, 0xB0 };
+static const symbol s_24_13[6] = { 0xD1, 0x82, 0xD1, 0x85, 0xD0, 0xB0 };
+static const symbol s_24_14[6] = { 0xD0, 0xB2, 0xD0, 0xB7, 0xD0, 0xB0 };
+static const symbol s_24_15[4] = { 0xD0, 0xBB, 0xD0, 0xB0 };
+static const symbol s_24_16[4] = { 0xD0, 0xBD, 0xD0, 0xB0 };
+static const symbol s_24_17[8] = { 0xD1, 0x87, 0xD0, 0xB0, 0xD0, 0xBD, 0xD0, 0xB0 };
+static const symbol s_24_18[8] = { 0xD2, 0x97, 0xD0, 0xB0, 0xD0, 0xBD, 0xD0, 0xB0 };
+static const symbol s_24_19[2] = { 0xD0, 0xB2 };
+static const symbol s_24_20[2] = { 0xD0, 0xB9 };
+static const symbol s_24_21[4] = { 0xD0, 0xB8, 0xD0, 0xB9 };
+static const symbol s_24_22[4] = { 0xD1, 0x81, 0xD0, 0xBD };
+static const symbol s_24_23[4] = { 0xD1, 0x82, 0xD0, 0xBD };
+static const symbol s_24_24[6] = { 0xD1, 0x81, 0xD0, 0xBC, 0xD0, 0xBD };
 
-static const struct among a_24[26] =
+static const struct among a_24[25] =
 {
-{ 2, s_24_0, -1, 1, 0},
-{ 4, s_24_1, -1, 1, 0},
+{ 4, s_24_0, -1, 1, 0},
+{ 2, s_24_1, -1, 1, 0},
 { 2, s_24_2, -1, 1, 0},
-{ 2, s_24_3, -1, 1, 0},
-{ 4, s_24_4, -1, 1, 0},
-{ 2, s_24_5, -1, 1, 0},
-{ 4, s_24_6, -1, 1, 0},
+{ 4, s_24_3, -1, 1, 0},
+{ 2, s_24_4, -1, 1, 0},
+{ 4, s_24_5, -1, 1, 0},
+{ 6, s_24_6, -1, 1, 0},
 { 6, s_24_7, -1, 1, 0},
-{ 6, s_24_8, -1, 1, 0},
-{ 4, s_24_9, -1, 2, 0},
-{ 4, s_24_10, -1, 1, 0},
-{ 8, s_24_11, 10, 1, 0},
+{ 4, s_24_8, -1, 2, 0},
+{ 4, s_24_9, -1, 1, 0},
+{ 8, s_24_10, 9, 1, 0},
+{ 4, s_24_11, -1, 1, 0},
 { 4, s_24_12, -1, 1, 0},
-{ 4, s_24_13, -1, 1, 0},
+{ 6, s_24_13, -1, 1, 0},
 { 6, s_24_14, -1, 1, 0},
-{ 6, s_24_15, -1, 1, 0},
-{ 4, s_24_16, -1, 2, 0},
-{ 4, s_24_17, -1, 1, 0},
-{ 8, s_24_18, 17, 1, 0},
-{ 8, s_24_19, 17, 1, 0},
+{ 4, s_24_15, -1, 2, 0},
+{ 4, s_24_16, -1, 1, 0},
+{ 8, s_24_17, 16, 1, 0},
+{ 8, s_24_18, 16, 1, 0},
+{ 2, s_24_19, -1, 1, 0},
 { 2, s_24_20, -1, 1, 0},
-{ 2, s_24_21, -1, 1, 0},
-{ 4, s_24_22, 21, 1, 0},
+{ 4, s_24_21, 20, 1, 0},
+{ 4, s_24_22, -1, 1, 0},
 { 4, s_24_23, -1, 1, 0},
-{ 4, s_24_24, -1, 1, 0},
-{ 6, s_24_25, -1, 1, 0}
+{ 6, s_24_24, -1, 1, 0}
 };
 
 static const symbol s_25_0[4] = { 0xD0, 0xB4, 0xD1, 0x85 };
@@ -1160,7 +1158,7 @@ static int r_verb_number_person(struct SN_env * z) {
 static int r_verb_tense_mood(struct SN_env * z) {
     int among_var;
     z->ket = z->c;
-    among_var = find_among_b(z, a_24, 26);
+    among_var = find_among_b(z, a_24, 25);
     if (!(among_var)) return 0;
     z->bra = z->c;
     switch (among_var) {
