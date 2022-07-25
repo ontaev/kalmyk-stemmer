@@ -109,7 +109,7 @@ backwardmode (
                     ()        
                 )
                 (delete)
-                test '{i}' ([next] delete)
+                test substring among ('{i}' '{y}' ([next] delete))
             )
 
     		'{m}' '{ch}{n}' '{t}{n}' '{m}{d}{n}'
@@ -128,9 +128,9 @@ backwardmode (
                 )
             )
 
-            '{a}{n}' '{a'}{n}' (
-                (hop 3 delete)
-                test '{g'}' ([next] delete)        
+            '{a}{n}' '{a'}{n}' '{ia}{n}'( 
+                (test hop 3 delete)
+                test substring among ('{g'}' ([next] delete))
             ) 
 
             '{r}{n}' (
@@ -164,7 +164,7 @@ backwardmode (
                     )
                 )
 
-            '{t}{a}' '{t}{a'}' (hop 2 delete)
+            '{t}{a}' '{t}{a'}' (test hop 2 delete)
 
         )
     )
@@ -181,7 +181,7 @@ backwardmode (
     		'{n'}{g}{i}{n}' (<-'{n'}') 
     		
     		'{g'}{i}{n}' (
-    			test vowel hop 2 delete
+    			test vowel test hop 2 delete
     			test substring among (
     				'{a}{a}' '{e}{e}' '{i}{i}' '{o}{o}' '{u}{u}' '{y}{y}' '{e'}{e'}' '{iu}{iu}' '{ia}{ia}' '{a'}{a'}' '{o'}{o'}' '{u'}{u'}'	(hop 2 [next] delete)
     				)
@@ -193,7 +193,7 @@ backwardmode (
     		
     		'{n'}{g}{a}{r}' '{n'}{g}{a'}{r}' (<-'{n'}')
     		'{g'}{a}{r}' '{g'}{a'}{r}' (
-    			test vowel hop 2 delete
+    			test hop 2 delete
     			test substring among (
     				'{a}{a}' '{e}{e}' '{i}{i}' '{o}{o}' '{u}{u}' '{y}{y}' '{e'}{e'}' '{iu}{iu}' '{ia}{ia}' '{a'}{a'}' '{o'}{o'}' '{u'}{u'}'	(hop 2 [next] delete)
     				)
@@ -235,7 +235,7 @@ backwardmode (
             )
     		'{n}' (test (vowel and hop 3) delete)
     		'{g}' (
-    			test (vowel and hop 3) delete
+    			test (vowel and test hop 3) delete
     			test substring among (
     				'{a}{a}' '{e}{e}' '{i}{i}' '{o}{o}' '{u}{u}' '{y}{y}' '{e'}{e'}' '{iu}{iu}' '{ia}{ia}' '{a'}{a'}' '{o'}{o'}' '{u'}{u'}'	([next] delete)
     				)
@@ -245,9 +245,9 @@ backwardmode (
 
     define deverbative as (
         [substring] among (
-            '{l}{g'}{n}' '{d}{l}' '{d}{g}' '{s}{n}' '{l}{t}' (delete)
+            '{l}{g'}{n}' '{l}{g'}' '{d}{l}' '{d}{g}' '{s}{n}' '{l}{t}' (test hop 3 delete)
             '{v}{r}' (
-                (hop 3 delete)
+                (test hop 3 delete)
                 test substring among (
                     '{l}{g'}' ([hop 2] delete)
                 )
@@ -288,7 +288,7 @@ backwardmode (
     define verb_number_person as (
         [substring] among (
             '{v}' '{v}{i}{d}{n}' (
-                (hop 3 delete)
+                (test hop 3 delete)
                 test substring among ('{u}' '{u'}' ([next] delete))
             )
             '{ch}' '{t}' 
@@ -315,8 +315,13 @@ backwardmode (
             //     test not substring among ('{d}' ())
             //     (delete)
             // )
+            '{s}{n}' (
+                /* Exclude noun_impersonal_possessive*/
+                test not substring among ('{a}' '{a'}' ())
+                (delete)
+            )
 
-            '{zh'}{a}{n}{a}' '{zh'}{a'}{n}{a'}' '{ch}{a}{n}{a}' '{n}{a}' '{n}{a'}' '{zh'}' '{ch}' '{s}{n}' '{s}{m}{n}' (delete)
+            '{zh'}{a}{n}{a}' '{zh'}{a'}{n}{a'}' '{ch}{a}{n}{a}' '{ch}{a}' '{n}{a}' '{n}{a'}' '{zh'}' '{ch}' '{s}{m}{n}' (delete)
 
             '{t}{n}' '{i}{i'}' '{i}{ia}' '{i'}' '{s}{a}' '{s}{a'}' '{s}{u}' '{s}{u'}' '{t}{kh}{a}' '{t}{kh}{a'}' '{v}{z}{a}' '{v}{z}{a'}' (delete) 
         )
@@ -345,7 +350,7 @@ backwardmode (
     define gerund as (
         [substring] among (
             '{g'}{a}{d}' '{g'}{a'}{d}' (test vowel (delete))
-            '{kh}{l}{a}' '{kh}{l}{a'}' '{kh}{l}{a}{n}{mya}' '{kh}{l}{a'}{n}{mya}' '{kh}{l}{a}{r}{n}' '{kh}{l}{a'}{r}{n}' '{kh}{a}{r}' '{kh}{a'}{r}' '{a}{d}' '{a'}{d}' '{t}{l}' '{s}{a}{r}{a}' '{s}{a'}{r}{a'}' '{g}{ch}' '{d}{g}'(delete)
+            '{kh}{l}{a}' '{kh}{l}{a'}' '{kh}{l}{a}{n}{mya}' '{kh}{l}{a'}{n}{mya}' '{kh}{l}{a}{r}{n}' '{kh}{l}{a'}{r}{n}' '{kh}{a}{r}' '{kh}{a'}{r}' '{a}{d}' '{a'}{d}' '{l}{g'}{a'}{d}' '{t}{l}' '{s}{a}{r}{a}' '{s}{a'}{r}{a'}' '{g}{ch}' '{d}{g}'(delete)
             '{s}{n}' '{s}{n}{a}' '{v}{ch}{n}' (test not vowel (delete))
 
         )
@@ -361,7 +366,7 @@ define stem as (
 	backwards(
 		
         (
-            try gerund
+            do gerund
             verb_stem
         )
         or (
