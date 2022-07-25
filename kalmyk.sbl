@@ -92,6 +92,7 @@ backwardmode (
                 (delete)
                 test substring among (
                     '{a}{ch}' '{a'}{ch}' ([hop 2] delete)
+                    '{ch}' ([next] delete)
                 )
             )
     	)
@@ -108,6 +109,7 @@ backwardmode (
                     ()        
                 )
                 (delete)
+                test '{i}' ([next] delete)
             )
 
     		'{m}' '{ch}{n}' '{t}{n}' '{m}{d}{n}'
@@ -244,6 +246,12 @@ backwardmode (
     define deverbative as (
         [substring] among (
             '{l}{g'}{n}' '{d}{l}'(delete)
+            '{v}{r}' (
+                (delete)
+                test substring among (
+                    '{l}{g'}' ([hop 2] delete)
+                )
+            )
         )
     )    
 
@@ -348,15 +356,15 @@ define stem as (
 	
 	backwards(
 		
-        // do (
-        //     gerund or verb_stem
-        // )
-        do gerund
-        do verb_stem
-        do noun
-        do noun_double_declination
-        do noun_plural
-        do deverbative
-       
+        (
+            try gerund
+            verb_stem
+        )
+        or (
+            do noun
+            do noun_double_declination
+            do noun_plural
+            do deverbative
+        )
 	)
 )
