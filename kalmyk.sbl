@@ -83,7 +83,7 @@ backwardmode (
 
     define noun_plural as (
     	[substring] among (
-            '{s}' (test vowel hop 3 delete)
+            '{s}' (hop 3 delete)
             '{n'}{g}{u}{d}' '{n'}{g}{u'}{d}' (<-'{n'}') 
             '{g}{u}{d}' '{g}{u'}{d}' (<-'{g}')
             '{k}{u}{d}' '{k}{u'}{d}' (<-'{k}')
@@ -245,7 +245,7 @@ backwardmode (
 
     define deverbative as (
         [substring] among (
-            '{l}{g'}{n}' '{d}{l}'(delete)
+            '{l}{g'}{n}' '{d}{l}' '{d}{g}' '{s}{n}' '{l}{t}' (delete)
             '{v}{r}' (
                 (delete)
                 test substring among (
@@ -263,6 +263,10 @@ backwardmode (
     define verb_particles as (
         [substring] among (
             '{m}{n}' (
+                (delete)
+                test substring among ('{s}' '{d}' '{kh}'([next] delete))
+            )
+            '{m}{b}' (
                 (delete)
                 test substring among ('{s}' '{d}' '{kh}'([next] delete))
             )
@@ -342,7 +346,7 @@ backwardmode (
         [substring] among (
             '{g'}{a}{d}' '{g'}{a'}{d}' (test vowel (delete))
             '{kh}{l}{a}' '{kh}{l}{a'}' '{kh}{l}{a}{r}{n}' '{kh}{l}{a'}{r}{n}' '{kh}{a}{r}' '{kh}{a'}{r}' '{a}{d}' '{a'}{d}' '{t}{l}' '{s}{a}{r}{a}' '{s}{a'}{r}{a'}' '{g}{ch}' '{d}{g}'(delete)
-            '{s}{n}' '{v}{ch}{n}' (test not vowel (delete))
+            '{s}{n}' '{s}{n}{a}' '{v}{ch}{n}' (test not vowel (delete))
 
         )
     )
