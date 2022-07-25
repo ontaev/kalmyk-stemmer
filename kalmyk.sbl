@@ -231,7 +231,7 @@ backwardmode (
                     '{n'}{g}{u}' '{n'}{g}{u'}' '{g}{u}' '{g}{u'}' '{k}{u}' '{k}{u'}' '{m}{u}' '{m}{u'}' '{d}{u}' '{d}{u'}' '{ch}{u}' '{ch}{u'}'
                     ()
                 )
-                (delete)
+                (hop 3 delete)
             )
     		'{n}' (test (vowel and hop 3) delete)
     		'{g}' (
@@ -247,7 +247,7 @@ backwardmode (
         [substring] among (
             '{l}{g'}{n}' '{d}{l}' '{d}{g}' '{s}{n}' '{l}{t}' (delete)
             '{v}{r}' (
-                (delete)
+                (hop 3 delete)
                 test substring among (
                     '{l}{g'}' ([hop 2] delete)
                 )

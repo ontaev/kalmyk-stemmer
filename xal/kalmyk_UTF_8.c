@@ -1091,6 +1091,10 @@ static int r_noun(struct SN_env * z) {
                 }
                 z->c = z->l - m_test9;
             }
+            {   int ret = skip_b_utf8(z->p, z->c, z->lb, 3);
+                if (ret < 0) return 0;
+                z->c = ret;
+            }
             {   int ret = slice_del(z);
                 if (ret < 0) return ret;
             }
@@ -1157,6 +1161,10 @@ static int r_deverbative(struct SN_env * z) {
             }
             break;
         case 2:
+            {   int ret = skip_b_utf8(z->p, z->c, z->lb, 3);
+                if (ret < 0) return 0;
+                z->c = ret;
+            }
             {   int ret = slice_del(z);
                 if (ret < 0) return ret;
             }
