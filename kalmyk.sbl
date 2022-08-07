@@ -83,13 +83,13 @@ backwardmode (
 
     define noun_plural as (
     	[substring] among (
-            '{s}' (hop 3 delete)
+            '{s}' (test hop 3 delete)
             '{n'}{g}{u}{d}' '{n'}{g}{u'}{d}' (<-'{n'}') 
             '{g}{u}{d}' '{g}{u'}{d}' (<-'{g}')
             '{k}{u}{d}' '{k}{u'}{d}' (<-'{k}')
     		'{m}{u}{d}' '{m}{u'}{d}' '{d}{u}{d}' '{d}{u'}{d}' '{ch}{u}{d}' '{ch}{u'}{d}' '{u}{d}' '{u'}{d}' (delete)
             '{n}{r}' (
-                (delete)
+                (test hop 3 delete)
                 test substring among (
                     '{a}{ch}' '{a'}{ch}' ([hop 2] delete)
                     '{ch}' ([next] delete)
@@ -130,7 +130,7 @@ backwardmode (
 
             '{a}{n}' '{a'}{n}' '{ia}{n}'( 
                 (test hop 3 delete)
-                test substring among ('{g'}' ([next] delete))
+                test substring among ('{g'}' (test hop 4 [next] delete))
             ) 
 
             '{r}{n}' (
@@ -181,9 +181,9 @@ backwardmode (
     		'{n'}{g}{i}{n}' (<-'{n'}') 
     		
     		'{g'}{i}{n}' (
-    			test vowel test hop 2 delete
+    			test vowel test hop 3 delete
     			test substring among (
-    				'{a}{a}' '{e}{e}' '{i}{i}' '{o}{o}' '{u}{u}' '{y}{y}' '{e'}{e'}' '{iu}{iu}' '{ia}{ia}' '{a'}{a'}' '{o'}{o'}' '{u'}{u'}'	(hop 2 [next] delete)
+    				'{a}{a}' '{e}{e}' '{i}{i}' '{o}{o}' '{u}{u}' '{y}{y}' '{e'}{e'}' '{iu}{iu}' '{ia}{ia}' '{a'}{a'}' '{o'}{o'}' '{u'}{u'}'	(test hop 2 [next] delete)
     				)
     			)	
 
@@ -195,7 +195,7 @@ backwardmode (
     		'{g'}{a}{r}' '{g'}{a'}{r}' (
     			test hop 2 delete
     			test substring among (
-    				'{a}{a}' '{e}{e}' '{i}{i}' '{o}{o}' '{u}{u}' '{y}{y}' '{e'}{e'}' '{iu}{iu}' '{ia}{ia}' '{a'}{a'}' '{o'}{o'}' '{u'}{u'}'	(hop 2 [next] delete)
+    				'{a}{a}' '{e}{e}' '{i}{i}' '{o}{o}' '{u}{u}' '{y}{y}' '{e'}{e'}' '{iu}{iu}' '{ia}{ia}' '{a'}{a'}' '{o'}{o'}' '{u'}{u'}'	(test hop 2 [next] delete)
     				)
     			)
 
@@ -219,12 +219,12 @@ backwardmode (
     		'{a}{r}' '{a'}{r}' '{l}{a}' '{l}{a'}' (
                 /* Exclude gerund affixes */                
                 test not substring among ('{kh}' ())
-                (hop 2 delete)
+                (hop 3 delete)
             ) 
 
 
     		'{i}{n}' '{y}{n}' '{t}' '{i}{g}' '{y}{g}' '{u}{r}' '{u'}{r}' '{t}{a}' '{t}{a'}' '{a}{s}' '{a'}{s}'
-    		(hop 2 delete)
+    		(hop 3 delete)
 
             '{d}' (
                 test not substring among (
@@ -245,7 +245,11 @@ backwardmode (
 
     define deverbative as (
         [substring] among (
-            '{l}{g'}{n}' '{l}{g'}' '{d}{l}' '{d}{g}' '{s}{n}' '{l}{t}' (test hop 3 delete)
+            '{l}{g'}{n}' (
+                test hop 3 delete
+                test substring among ('{a}' '{a'}' ([next] delete))
+            )
+            '{l}{g'}' '{d}{l}' '{d}{g}' '{s}{n}' '{l}{t}' (test hop 3 delete)
             '{v}{r}' (
                 (test hop 3 delete)
                 test substring among (
@@ -303,7 +307,7 @@ backwardmode (
             '{l}{a}' '{l}{a'}' (
                 /* Exclude gerund affixes */                
                 test not substring among ('{kh}' ())
-                (delete)
+                (test hop 3 delete)
             )
             // '{a}' '{a'}' (
             //     /* Exclude gerund affixes */                
@@ -321,7 +325,7 @@ backwardmode (
                 (delete)
             )
 
-            '{zh'}{a}{n}{a}' '{zh'}{a'}{n}{a'}' '{ch}{a}{n}{a}' '{ch}{a}' '{n}{a}' '{n}{a'}' '{zh'}' '{ch}' '{s}{m}{n}' (delete)
+            '{zh'}{a}{n}{a}' '{zh'}{a'}{n}{a'}' '{ch}{a}{n}{a}' '{ch}{a}' '{n}{a}' '{n}{a'}' '{zh'}' '{ch}' '{s}{m}{n}' (test hop 2 delete)
 
             '{t}{n}' '{i}{i'}' '{i}{ia}' '{i'}' '{s}{a}' '{s}{a'}' '{s}{u}' '{s}{u'}' '{t}{kh}{a}' '{t}{kh}{a'}' '{v}{z}{a}' '{v}{z}{a'}' (delete) 
         )
@@ -338,7 +342,11 @@ backwardmode (
             //     test not substring among ('{kh}{l}' '{s}{a}{r}' '{s}{a'}{r}'())
             //     (delete)
             // )
-            '{g}{d}' '{u}{l}' '{u'}{l}' '{l}{g'}' '{l}{ts}' '{l}{d}' '{l}{z}'/* verb voice (for example passive '{g}{d}')*/
+            '{g}{d}'  (
+                test hop 2 delete
+                test substring among ('{a}' '{a'}' ([next] delete))
+            )
+            '{u}{l}' '{u'}{l}' '{l}{g'}' '{l}{d}' '{l}{ts}' '{l}{z}'/* verb voice (for example passive '{g}{d}')*/
             '{ch}{k}' '{zh'}{a}' '{zh'}{a'}' '{ts}{kh}{a}' '{ts}{kh}{a'}' /* verb view (for example complete view '{ch}{k}')*/
             (hop 2 delete)
             '{r}{g}' (<- '{r}') 
@@ -349,7 +357,9 @@ backwardmode (
 
     define gerund as (
         [substring] among (
-            '{g'}{a}{d}' '{g'}{a'}{d}' (test vowel (delete))
+            '{g'}{a}{d}' '{g'}{a'}{d}' '{g'}{a}{r}' '{g'}{a'}{r}'(
+                test vowel (delete)
+            )
             '{kh}{l}{a}' '{kh}{l}{a'}' '{kh}{l}{a}{n}{mya}' '{kh}{l}{a'}{n}{mya}' '{kh}{l}{a}{r}{n}' '{kh}{l}{a'}{r}{n}' '{kh}{a}{r}' '{kh}{a'}{r}' '{a}{d}' '{a'}{d}' '{l}{g'}{a'}{d}' '{t}{l}' '{s}{a}{r}{a}' '{s}{a'}{r}{a'}' '{g}{ch}' '{d}{g}'(delete)
             '{s}{n}' '{s}{n}{a}' '{v}{ch}{n}' (test not vowel (delete))
 
