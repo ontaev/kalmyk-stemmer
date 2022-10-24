@@ -12,7 +12,7 @@
 
        Following compilation with
 
-           gcc -o kalmyk_UTF_8_prog xal/*.c
+           gcc -o kalmyk_UTF_8_prog xal\/\*.c
 
        The command line syntax is
 

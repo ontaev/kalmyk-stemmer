@@ -1,7 +1,7 @@
  /* Stemmer for Kalmyk
 		* author: Badma Ontaev
 		* e-mail: ontaev@gmail.com
-		* version: 0.1
+		* version: 0.2
 */
 
 stringescapes { }
@@ -63,9 +63,11 @@ routines (
 	noun
     noun_double_declination
 	noun_plural
+    deverbative
     verb_number_person
     verb_tense_mood
     verb_stem
+    verb_particles
     gerund
 )
 
@@ -77,87 +79,22 @@ backwardmode (
 
 /*---------------------------------NOUN----------------------------------------*/
 
-    /* Case suffixes */
-
-    define noun as (
-    	[substring] among (
-    		'{n}{a}' (<-'{n}')
-    		'{n}{a'}' (<-'{n}')
-    		
-    		'{n'}{g}{i}{n}' (<-'{n'}') 
-    		
-    		'{g'}{i}{n}' (
-    			test vowel delete
-    			test substring among (
-    				'{a}{a}' '{e}{e}' '{i}{i}' '{o}{o}' '{u}{u}' '{y}{y}' '{e'}{e'}' '{iu}{iu}' '{ia}{ia}' '{a'}{a'}' '{o'}{o'}' '{u'}{u'}'	([next] delete)
-    				)
-    			)	
-
-    		'{n'}{g}{i}{g}' (<-'{n'}')
-    		
-
-    		
-    		'{n'}{g}{a}{r}' '{n'}{g}{a'}{r}' (<-'{n'}')
-    		'{g'}{a}{r}' '{g'}{a'}{r}' (
-    			test vowel delete
-    			test substring among (
-    				'{a}{a}' '{e}{e}' '{i}{i}' '{o}{o}' '{u}{u}' '{y}{y}' '{e'}{e'}' '{iu}{iu}' '{ia}{ia}' '{a'}{a'}' '{o'}{o'}' '{u'}{u'}'	([next] delete)
-    				)
-    			)
-
-    		'{n'}{g}{a}{s}' '{n'}{g}{a'}{s}' (<-'{n'}')
-    		'{g'}{a}{s}' '{g'}{a'}{s}' (
-    			test vowel delete
-    			test substring among (
-    				'{a}{a}' '{e}{e}' '{i}{i}' '{o}{o}' '{u}{u}' '{y}{y}' '{e'}{e'}' '{iu}{iu}' '{ia}{ia}' '{a'}{a'}' '{o'}{o'}' '{u'}{u'}'	([next] delete)
-    				)
-    			)
-
-    		
- 	  		'{n'}{g}{u}{r}' '{n'}{g}{u'}{r}' (<-'{n'}')
-    		'{g'}{u}{r}' '{g'}{u'}{r}' (
-    			test vowel delete
-    			test substring among (
-    				'{a}{a}' '{e}{e}' '{i}{i}' '{o}{o}' '{u}{u}' '{y}{y}' '{e'}{e'}' '{iu}{iu}' '{ia}{ia}' '{a'}{a'}' '{o'}{o'}' '{u'}{u'}'	([next] delete)
-    				)
-    			) 
-
-    		'{a}{r}' '{a'}{r}' '{l}{a}' '{l}{a'}' (
-                /* Exclude gerund affixes */                
-                test not substring among ('{kh}' ())
-                (hop 2 delete)
-            ) 
-
-
-    		'{i}{n}' '{y}{n}' '{t}' '{i}{g}' '{y}{g}' '{u}{r}' '{u'}{r}' '{t}{a}' '{t}{a'}' '{a}{s}' '{a'}{s}'
-    		(hop 2 delete)
-
-            '{d}' (
-                test not substring among (
-                    '{n'}{g}{u}' '{n'}{g}{u'}' '{g}{u}' '{g}{u'}' '{k}{u}' '{k}{u'}' '{m}{u}' '{m}{u'}'
-                    ()
-                )
-                (delete)
-            )
-    		'{n}' (test (vowel and hop 3) delete)
-    		'{g}' (
-    			test (vowel and hop 3) delete
-    			test substring among (
-    				'{a}{a}' '{e}{e}' '{i}{i}' '{o}{o}' '{u}{u}' '{y}{y}' '{e'}{e'}' '{iu}{iu}' '{ia}{ia}' '{a'}{a'}' '{o'}{o'}' '{u'}{u'}'	([next] delete)
-    				)
-    			)
-    	)
-    )
-
     /* Plural suffixes */
 
     define noun_plural as (
     	[substring] among (
+            '{s}' (test hop 3 delete)
             '{n'}{g}{u}{d}' '{n'}{g}{u'}{d}' (<-'{n'}') 
             '{g}{u}{d}' '{g}{u'}{d}' (<-'{g}')
             '{k}{u}{d}' '{k}{u'}{d}' (<-'{k}')
-    		'{m}{u}{d}' '{m}{u'}{d}' '{u}{d}' '{u'}{d}' '{n}{r}' '{s}'
-    		(delete)
+    		'{m}{u}{d}' '{m}{u'}{d}' '{d}{u}{d}' '{d}{u'}{d}' '{ch}{u}{d}' '{ch}{u'}{d}' '{u}{d}' '{u'}{d}' (delete)
+            '{n}{r}' (
+                (test hop 3 delete)
+                test substring among (
+                    '{a}{ch}' '{a'}{ch}' ([hop 2] delete)
+                    '{ch}' ([next] delete)
+                )
+            )
     	)
 
     )
@@ -172,6 +109,7 @@ backwardmode (
                     ()        
                 )
                 (delete)
+                test substring among ('{i}' '{y}' ([next] delete))
             )
 
     		'{m}' '{ch}{n}' '{t}{n}' '{m}{d}{n}'
@@ -190,9 +128,9 @@ backwardmode (
                 )
             )
 
-            '{a}{n}' '{a'}{n}' (
-                (delete)
-                test '{g'}' ([next] delete)        
+            '{a}{n}' '{a'}{n}' '{ia}{n}'( 
+                (test hop 3 delete)
+                test substring among ('{g'}' (test hop 4 [next] delete))
             ) 
 
             '{r}{n}' (
@@ -226,19 +164,135 @@ backwardmode (
                     )
                 )
 
-            '{t}{a}' '{t}{a'}' (hop 2 delete)
+            '{t}{a}' '{t}{a'}' (test hop 2 delete)
 
         )
     )
 
+    /* Case suffixes */
+
+    define noun as (
+        
+        do (noun_impersonal_possessive or noun_possessive)
+    	[substring] among (
+    		'{n}{a}' (<-'{n}')
+    		'{n}{a'}' (<-'{n}')
+    		
+    		'{n'}{g}{i}{n}' (<-'{n'}') 
+    		
+    		'{g'}{i}{n}' (
+    			test vowel test hop 3 delete
+    			test substring among (
+    				'{a}{a}' '{e}{e}' '{i}{i}' '{o}{o}' '{u}{u}' '{y}{y}' '{e'}{e'}' '{iu}{iu}' '{ia}{ia}' '{a'}{a'}' '{o'}{o'}' '{u'}{u'}'	(test hop 2 [next] delete)
+    				)
+    			)	
+
+    		'{n'}{g}{i}{g}' (<-'{n'}')
+    		
+
+    		
+    		'{n'}{g}{a}{r}' '{n'}{g}{a'}{r}' (<-'{n'}')
+    		'{g'}{a}{r}' '{g'}{a'}{r}' (
+    			test hop 2 delete
+    			test substring among (
+    				'{a}{a}' '{e}{e}' '{i}{i}' '{o}{o}' '{u}{u}' '{y}{y}' '{e'}{e'}' '{iu}{iu}' '{ia}{ia}' '{a'}{a'}' '{o'}{o'}' '{u'}{u'}'	(test hop 2 [next] delete)
+    				)
+    			)
+
+    		'{n'}{g}{a}{s}' '{n'}{g}{a'}{s}' (<-'{n'}')
+    		'{g'}{a}{s}' '{g'}{a'}{s}' (
+    			test vowel delete
+    			test substring among (
+    				'{a}{a}' '{e}{e}' '{i}{i}' '{o}{o}' '{u}{u}' '{y}{y}' '{e'}{e'}' '{iu}{iu}' '{ia}{ia}' '{a'}{a'}' '{o'}{o'}' '{u'}{u'}'	([next] delete)
+    				)
+    			)
+
+    		
+ 	  		'{n'}{g}{u}{r}' '{n'}{g}{u'}{r}' (<-'{n'}')
+    		'{g'}{u}{r}' '{g'}{u'}{r}' (
+    			test vowel delete
+    			test substring among (
+    				'{a}{a}' '{e}{e}' '{i}{i}' '{o}{o}' '{u}{u}' '{y}{y}' '{e'}{e'}' '{iu}{iu}' '{ia}{ia}' '{a'}{a'}' '{o'}{o'}' '{u'}{u'}'	([next] delete)
+    				)
+    			) 
+
+    		'{a}{r}' '{a'}{r}' '{l}{a}' '{l}{a'}' (
+                /* Exclude gerund affixes */                
+                test not substring among ('{kh}' ())
+                (hop 3 delete)
+            ) 
+
+
+    		'{i}{n}' '{y}{n}' '{t}' '{i}{g}' '{y}{g}' '{u}{r}' '{u'}{r}' '{t}{a}' '{t}{a'}' '{a}{s}' '{a'}{s}'
+    		(hop 3 delete)
+
+            '{d}' (
+                test not substring among (
+                    '{n'}{g}{u}' '{n'}{g}{u'}' '{g}{u}' '{g}{u'}' '{k}{u}' '{k}{u'}' '{m}{u}' '{m}{u'}' '{d}{u}' '{d}{u'}' '{ch}{u}' '{ch}{u'}'
+                    ()
+                )
+                (hop 3 delete)
+            )
+    		'{n}' (test (vowel and hop 3) delete)
+    		'{g}' (
+    			test (vowel and test hop 3) delete
+    			test substring among (
+    				'{a}{a}' '{e}{e}' '{i}{i}' '{o}{o}' '{u}{u}' '{y}{y}' '{e'}{e'}' '{iu}{iu}' '{ia}{ia}' '{a'}{a'}' '{o'}{o'}' '{u'}{u'}'	([next] delete)
+    				)
+    			)
+    	)        
+    )
+
+    define deverbative as (
+        [substring] among (
+            '{l}{g'}{n}' (
+                test hop 3 delete
+                test substring among ('{a}' '{a'}' ([next] delete))
+            )
+            '{l}{g'}' '{d}{l}' '{d}{g}' '{s}{n}' '{l}{t}' (test hop 3 delete)
+            '{v}{r}' (
+                (test hop 3 delete)
+                test substring among (
+                    '{l}{g'}' ([hop 2] delete)
+                )
+            )
+        )
+    )    
+
+    
+
 /*---------------------------------VERB----------------------------------------*/
 
 
-    
+    define verb_particles as (
+        [substring] among (
+            '{m}{n}' (
+                (delete)
+                test substring among ('{s}' '{d}' '{kh}'([next] delete))
+            )
+            '{m}{b}' (
+                (delete)
+                test substring among ('{s}' '{d}' '{kh}'([next] delete))
+            )
+            '{g}{o}' (
+                (delete)
+                test substring among ('{d}' '{sh}' '{l}'([next] delete))
+            )
+            '{kh}{sh}' (
+                (delete)
+            )
+            '{kh}{n}{mya}'(
+                (hop 3 delete)
+            )
+            '{kh}{i}{n}{mya}'(
+                (hop 3 delete)
+            )
+        )
+    )
     define verb_number_person as (
         [substring] among (
             '{v}' '{v}{i}{d}{n}' (
-                (delete)
+                (test hop 3 delete)
                 test substring among ('{u}' '{u'}' ([next] delete))
             )
             '{ch}' '{t}' 
@@ -247,40 +301,54 @@ backwardmode (
     )
     define verb_tense_mood as (
         [substring] among (
+
+            '{kh}' (delete)
             
             '{l}{a}' '{l}{a'}' (
                 /* Exclude gerund affixes */                
                 test not substring among ('{kh}' ())
-                (delete)
+                (test hop 3 delete)
             )
-            '{a}' '{a'}' (
-                /* Exclude gerund affixes */                
-                test not substring among ('{s}{a}{r}' '{s}{a'}{r}'())
-                (delete)
-            )
-            '{g}' (
-                /* Exclude gerund affixes */                
-                test not substring among ('{d}' ())
+            // '{a}' '{a'}' (
+            //     /* Exclude gerund affixes */                
+            //     test not substring among ('{s}{a}{r}' '{s}{a'}{r}'())
+            //     (delete)
+            // )
+            // '{g}' (
+            //     /* Exclude gerund affixes */                
+            //     test not substring among ('{d}' ())
+            //     (delete)
+            // )
+            '{s}{n}' (
+                /* Exclude noun_impersonal_possessive*/
+                test not substring among ('{a}' '{a'}' ())
                 (delete)
             )
 
-            '{zh'}{a}{n}{a}' '{zh'}{a'}{n}{a'}' '{ch}{a}{n}{a}' '{n}{a}' '{n}{a'}' '{v}' '{zh'}' '{ch}' '{s}{n}' '{s}{m}{n}' (delete)
+            '{zh'}{a}{n}{a}' '{zh'}{a'}{n}{a'}' '{ch}{a}{n}{a}' '{ch}{a}' '{n}{a}' '{n}{a'}' '{zh'}' '{ch}' '{s}{m}{n}' (test hop 2 delete)
 
-            '{t}{n}' '{i}{i'}' '{i}{ia}' '{i'}' '{s}{a}' '{s}{a'}' '{s}{u}' '{s}{u'}' '{s}' '{t}{kh}{a}' '{t}{kh}{a'}' '{v}{z}{a}' '{v}{z}{a'}' (delete) 
+            '{t}{n}' '{i}{i'}' '{i}{ia}' '{i'}' '{s}{a}' '{s}{a'}' '{s}{u}' '{s}{u'}' '{t}{kh}{a}' '{t}{kh}{a'}' '{v}{z}{a}' '{v}{z}{a'}' (delete) 
         )
     )
 
     define verb_stem as (
+        try verb_particles
+        try verb_number_person
+        try verb_tense_mood
         [substring] among (
 
-            '{a}' '{a'}' (
-                /* Exclude gerund affixes */                
-                test not substring among ('{kh}{l}' '{s}{a}{r}' '{s}{a'}{r}'())
-                (delete)
+            // '{a}' '{a'}' (
+            //     /* Exclude gerund affixes */                
+            //     test not substring among ('{kh}{l}' '{s}{a}{r}' '{s}{a'}{r}'())
+            //     (delete)
+            // )
+            '{g}{d}'  (
+                test hop 2 delete
+                test substring among ('{a}' '{a'}' ([next] delete))
             )
-            '{g}{d}' '{u}{l}' '{u'}{l}' '{l}{g'}' '{l}{ts}' '{l}{d}' /* verb voice (for example passive '{g}{d}')*/
+            '{u}{l}' '{u'}{l}' '{l}{g'}' '{l}{d}' '{l}{ts}' '{l}{z}'/* verb voice (for example passive '{g}{d}')*/
             '{ch}{k}' '{zh'}{a}' '{zh'}{a'}' '{ts}{kh}{a}' '{ts}{kh}{a'}' /* verb view (for example complete view '{ch}{k}')*/
-            (delete)
+            (hop 2 delete)
             '{r}{g}' (<- '{r}') 
             '{d}{kh}' (<- '{d}')
             '{s}{k}' (<- '{s}')
@@ -289,7 +357,11 @@ backwardmode (
 
     define gerund as (
         [substring] among (
-            '{kh}{l}{a}' '{kh}{l}{a'}' '{kh}{l}{a}{r}{n}' '{kh}{l}{a'}{r}{n}' '{kh}{a}{r}' '{kh}{a'}{r}' '{a}{d}' '{a'}{d}' '{t}{l}' '{s}{a}{r}{a}' '{s}{a'}{r}{a'}' '{v}{ch}{n}' '{s}{n}' '{g}{ch}' '{d}{g}'(delete)
+            '{g'}{a}{d}' '{g'}{a'}{d}' '{g'}{a}{r}' '{g'}{a'}{r}'(
+                test vowel (delete)
+            )
+            '{kh}{l}{a}' '{kh}{l}{a'}' '{kh}{l}{a}{n}{mya}' '{kh}{l}{a'}{n}{mya}' '{kh}{l}{a}{r}{n}' '{kh}{l}{a'}{r}{n}' '{kh}{a}{r}' '{kh}{a'}{r}' '{a}{d}' '{a'}{d}' '{l}{g'}{a'}{d}' '{t}{l}' '{s}{a}{r}{a}' '{s}{a'}{r}{a'}' '{g}{ch}' '{d}{g}'(delete)
+            '{s}{n}' '{s}{n}{a}' '{v}{ch}{n}' (test not vowel (delete))
 
         )
     )
@@ -303,14 +375,15 @@ define stem as (
 	
 	backwards(
 		
-        do noun_possessive	
-        do noun_impersonal_possessive	
-        do noun
-        do noun_double_declination
-		do noun_plural
-        do verb_number_person
-        do verb_tense_mood
-        do verb_stem
-        do gerund
+        (
+            do gerund
+            verb_stem
+        )
+        or (
+            do noun
+            do noun_double_declination
+            do noun_plural
+            do deverbative
+        )
 	)
 )

@@ -3,9 +3,11 @@
 #include "header.h"
 
 static int r_gerund(struct SN_env * z);
+static int r_verb_particles(struct SN_env * z);
 static int r_verb_stem(struct SN_env * z);
 static int r_verb_tense_mood(struct SN_env * z);
 static int r_verb_number_person(struct SN_env * z);
+static int r_deverbative(struct SN_env * z);
 static int r_noun_plural(struct SN_env * z);
 static int r_noun_double_declination(struct SN_env * z);
 static int r_noun(struct SN_env * z);
@@ -30,356 +32,278 @@ extern void kalmyk_UTF_8_close_env(struct SN_env * z);
 #ifdef __cplusplus
 }
 #endif
-static const symbol s_0_0[4] = { 0xD1, 0x83, 0xD1, 0x83 };
-static const symbol s_0_1[4] = { 0xD1, 0x8B, 0xD1, 0x8B };
-static const symbol s_0_2[4] = { 0xD1, 0x8D, 0xD1, 0x8D };
-static const symbol s_0_3[4] = { 0xD1, 0x8E, 0xD1, 0x8E };
-static const symbol s_0_4[4] = { 0xD1, 0x8F, 0xD1, 0x8F };
-static const symbol s_0_5[4] = { 0xD3, 0x99, 0xD3, 0x99 };
-static const symbol s_0_6[4] = { 0xD3, 0xA9, 0xD3, 0xA9 };
-static const symbol s_0_7[4] = { 0xD2, 0xAF, 0xD2, 0xAF };
-static const symbol s_0_8[4] = { 0xD0, 0xB0, 0xD0, 0xB0 };
-static const symbol s_0_9[4] = { 0xD0, 0xB5, 0xD0, 0xB5 };
-static const symbol s_0_10[4] = { 0xD0, 0xB8, 0xD0, 0xB8 };
-static const symbol s_0_11[4] = { 0xD0, 0xBE, 0xD0, 0xBE };
+static const symbol s_0_0[2] = { 0xD1, 0x87 };
+static const symbol s_0_1[4] = { 0xD3, 0x99, 0xD1, 0x87 };
+static const symbol s_0_2[4] = { 0xD0, 0xB0, 0xD1, 0x87 };
 
-static const struct among a_0[12] =
+static const struct among a_0[3] =
 {
-{ 4, s_0_0, -1, 1, 0},
-{ 4, s_0_1, -1, 1, 0},
-{ 4, s_0_2, -1, 1, 0},
-{ 4, s_0_3, -1, 1, 0},
-{ 4, s_0_4, -1, 1, 0},
-{ 4, s_0_5, -1, 1, 0},
-{ 4, s_0_6, -1, 1, 0},
-{ 4, s_0_7, -1, 1, 0},
-{ 4, s_0_8, -1, 1, 0},
-{ 4, s_0_9, -1, 1, 0},
-{ 4, s_0_10, -1, 1, 0},
-{ 4, s_0_11, -1, 1, 0}
+{ 2, s_0_0, -1, 2, 0},
+{ 4, s_0_1, 0, 1, 0},
+{ 4, s_0_2, 0, 1, 0}
 };
 
-static const symbol s_1_0[4] = { 0xD1, 0x83, 0xD1, 0x83 };
-static const symbol s_1_1[4] = { 0xD1, 0x8B, 0xD1, 0x8B };
-static const symbol s_1_2[4] = { 0xD1, 0x8D, 0xD1, 0x8D };
-static const symbol s_1_3[4] = { 0xD1, 0x8E, 0xD1, 0x8E };
-static const symbol s_1_4[4] = { 0xD1, 0x8F, 0xD1, 0x8F };
-static const symbol s_1_5[4] = { 0xD3, 0x99, 0xD3, 0x99 };
-static const symbol s_1_6[4] = { 0xD3, 0xA9, 0xD3, 0xA9 };
-static const symbol s_1_7[4] = { 0xD2, 0xAF, 0xD2, 0xAF };
-static const symbol s_1_8[4] = { 0xD0, 0xB0, 0xD0, 0xB0 };
-static const symbol s_1_9[4] = { 0xD0, 0xB5, 0xD0, 0xB5 };
-static const symbol s_1_10[4] = { 0xD0, 0xB8, 0xD0, 0xB8 };
-static const symbol s_1_11[4] = { 0xD0, 0xBE, 0xD0, 0xBE };
+static const symbol s_1_0[4] = { 0xD0, 0xBD, 0xD1, 0x80 };
+static const symbol s_1_1[2] = { 0xD1, 0x81 };
+static const symbol s_1_2[4] = { 0xD1, 0x83, 0xD0, 0xB4 };
+static const symbol s_1_3[6] = { 0xD1, 0x87, 0xD1, 0x83, 0xD0, 0xB4 };
+static const symbol s_1_4[6] = { 0xD0, 0xB3, 0xD1, 0x83, 0xD0, 0xB4 };
+static const symbol s_1_5[8] = { 0xD2, 0xA3, 0xD0, 0xB3, 0xD1, 0x83, 0xD0, 0xB4 };
+static const symbol s_1_6[6] = { 0xD0, 0xB4, 0xD1, 0x83, 0xD0, 0xB4 };
+static const symbol s_1_7[6] = { 0xD0, 0xBA, 0xD1, 0x83, 0xD0, 0xB4 };
+static const symbol s_1_8[6] = { 0xD0, 0xBC, 0xD1, 0x83, 0xD0, 0xB4 };
+static const symbol s_1_9[4] = { 0xD2, 0xAF, 0xD0, 0xB4 };
+static const symbol s_1_10[6] = { 0xD1, 0x87, 0xD2, 0xAF, 0xD0, 0xB4 };
+static const symbol s_1_11[6] = { 0xD0, 0xB3, 0xD2, 0xAF, 0xD0, 0xB4 };
+static const symbol s_1_12[8] = { 0xD2, 0xA3, 0xD0, 0xB3, 0xD2, 0xAF, 0xD0, 0xB4 };
+static const symbol s_1_13[6] = { 0xD0, 0xB4, 0xD2, 0xAF, 0xD0, 0xB4 };
+static const symbol s_1_14[6] = { 0xD0, 0xBA, 0xD2, 0xAF, 0xD0, 0xB4 };
+static const symbol s_1_15[6] = { 0xD0, 0xBC, 0xD2, 0xAF, 0xD0, 0xB4 };
 
-static const struct among a_1[12] =
+static const struct among a_1[16] =
 {
-{ 4, s_1_0, -1, 1, 0},
-{ 4, s_1_1, -1, 1, 0},
-{ 4, s_1_2, -1, 1, 0},
-{ 4, s_1_3, -1, 1, 0},
-{ 4, s_1_4, -1, 1, 0},
-{ 4, s_1_5, -1, 1, 0},
-{ 4, s_1_6, -1, 1, 0},
-{ 4, s_1_7, -1, 1, 0},
-{ 4, s_1_8, -1, 1, 0},
-{ 4, s_1_9, -1, 1, 0},
-{ 4, s_1_10, -1, 1, 0},
-{ 4, s_1_11, -1, 1, 0}
+{ 4, s_1_0, -1, 6, 0},
+{ 2, s_1_1, -1, 1, 0},
+{ 4, s_1_2, -1, 5, 0},
+{ 6, s_1_3, 2, 5, 0},
+{ 6, s_1_4, 2, 3, 0},
+{ 8, s_1_5, 4, 2, 0},
+{ 6, s_1_6, 2, 5, 0},
+{ 6, s_1_7, 2, 4, 0},
+{ 6, s_1_8, 2, 5, 0},
+{ 4, s_1_9, -1, 5, 0},
+{ 6, s_1_10, 9, 5, 0},
+{ 6, s_1_11, 9, 3, 0},
+{ 8, s_1_12, 11, 2, 0},
+{ 6, s_1_13, 9, 5, 0},
+{ 6, s_1_14, 9, 4, 0},
+{ 6, s_1_15, 9, 5, 0}
 };
 
-static const symbol s_2_0[4] = { 0xD1, 0x83, 0xD1, 0x83 };
-static const symbol s_2_1[4] = { 0xD1, 0x8B, 0xD1, 0x8B };
-static const symbol s_2_2[4] = { 0xD1, 0x8D, 0xD1, 0x8D };
-static const symbol s_2_3[4] = { 0xD1, 0x8E, 0xD1, 0x8E };
-static const symbol s_2_4[4] = { 0xD1, 0x8F, 0xD1, 0x8F };
-static const symbol s_2_5[4] = { 0xD3, 0x99, 0xD3, 0x99 };
-static const symbol s_2_6[4] = { 0xD3, 0xA9, 0xD3, 0xA9 };
-static const symbol s_2_7[4] = { 0xD2, 0xAF, 0xD2, 0xAF };
-static const symbol s_2_8[4] = { 0xD0, 0xB0, 0xD0, 0xB0 };
-static const symbol s_2_9[4] = { 0xD0, 0xB5, 0xD0, 0xB5 };
-static const symbol s_2_10[4] = { 0xD0, 0xB8, 0xD0, 0xB8 };
-static const symbol s_2_11[4] = { 0xD0, 0xBE, 0xD0, 0xBE };
+static const symbol s_2_0[4] = { 0xD1, 0x8B, 0xD0, 0xBD };
+static const symbol s_2_1[4] = { 0xD3, 0x99, 0xD0, 0xBD };
+static const symbol s_2_2[4] = { 0xD0, 0xB0, 0xD0, 0xBD };
+static const symbol s_2_3[4] = { 0xD0, 0xB8, 0xD0, 0xBD };
 
-static const struct among a_2[12] =
+static const struct among a_2[4] =
 {
-{ 4, s_2_0, -1, 1, 0},
-{ 4, s_2_1, -1, 1, 0},
-{ 4, s_2_2, -1, 1, 0},
-{ 4, s_2_3, -1, 1, 0},
-{ 4, s_2_4, -1, 1, 0},
-{ 4, s_2_5, -1, 1, 0},
-{ 4, s_2_6, -1, 1, 0},
-{ 4, s_2_7, -1, 1, 0},
-{ 4, s_2_8, -1, 1, 0},
-{ 4, s_2_9, -1, 1, 0},
-{ 4, s_2_10, -1, 1, 0},
-{ 4, s_2_11, -1, 1, 0}
+{ 4, s_2_0, -1, -1, 0},
+{ 4, s_2_1, -1, -1, 0},
+{ 4, s_2_2, -1, -1, 0},
+{ 4, s_2_3, -1, -1, 0}
 };
 
-static const symbol s_3_0[4] = { 0xD1, 0x83, 0xD1, 0x83 };
-static const symbol s_3_1[4] = { 0xD1, 0x8B, 0xD1, 0x8B };
-static const symbol s_3_2[4] = { 0xD1, 0x8D, 0xD1, 0x8D };
-static const symbol s_3_3[4] = { 0xD1, 0x8E, 0xD1, 0x8E };
-static const symbol s_3_4[4] = { 0xD1, 0x8F, 0xD1, 0x8F };
-static const symbol s_3_5[4] = { 0xD3, 0x99, 0xD3, 0x99 };
-static const symbol s_3_6[4] = { 0xD3, 0xA9, 0xD3, 0xA9 };
-static const symbol s_3_7[4] = { 0xD2, 0xAF, 0xD2, 0xAF };
-static const symbol s_3_8[4] = { 0xD0, 0xB0, 0xD0, 0xB0 };
-static const symbol s_3_9[4] = { 0xD0, 0xB5, 0xD0, 0xB5 };
-static const symbol s_3_10[4] = { 0xD0, 0xB8, 0xD0, 0xB8 };
-static const symbol s_3_11[4] = { 0xD0, 0xBE, 0xD0, 0xBE };
+static const symbol s_3_0[2] = { 0xD1, 0x8B };
+static const symbol s_3_1[2] = { 0xD0, 0xB8 };
 
-static const struct among a_3[12] =
+static const struct among a_3[2] =
 {
-{ 4, s_3_0, -1, 1, 0},
-{ 4, s_3_1, -1, 1, 0},
-{ 4, s_3_2, -1, 1, 0},
-{ 4, s_3_3, -1, 1, 0},
-{ 4, s_3_4, -1, 1, 0},
-{ 4, s_3_5, -1, 1, 0},
-{ 4, s_3_6, -1, 1, 0},
-{ 4, s_3_7, -1, 1, 0},
-{ 4, s_3_8, -1, 1, 0},
-{ 4, s_3_9, -1, 1, 0},
-{ 4, s_3_10, -1, 1, 0},
-{ 4, s_3_11, -1, 1, 0}
+{ 2, s_3_0, -1, 1, 0},
+{ 2, s_3_1, -1, 1, 0}
 };
 
-static const symbol s_4_0[2] = { 0xD1, 0x85 };
+static const symbol s_4_0[4] = { 0xD0, 0xBD, 0xD1, 0x8C };
+static const symbol s_4_1[2] = { 0xD0, 0xBC };
+static const symbol s_4_2[4] = { 0xD1, 0x82, 0xD0, 0xBD };
+static const symbol s_4_3[4] = { 0xD1, 0x87, 0xD0, 0xBD };
+static const symbol s_4_4[6] = { 0xD0, 0xBC, 0xD0, 0xB4, 0xD0, 0xBD };
 
-static const struct among a_4[1] =
+static const struct among a_4[5] =
 {
-{ 2, s_4_0, -1, -1, 0}
+{ 4, s_4_0, -1, 1, 0},
+{ 2, s_4_1, -1, 2, 0},
+{ 4, s_4_2, -1, 2, 0},
+{ 4, s_4_3, -1, 2, 0},
+{ 6, s_4_4, -1, 2, 0}
 };
 
-static const symbol s_5_0[4] = { 0xD0, 0xB3, 0xD1, 0x83 };
-static const symbol s_5_1[6] = { 0xD2, 0xA3, 0xD0, 0xB3, 0xD1, 0x83 };
-static const symbol s_5_2[4] = { 0xD0, 0xBA, 0xD1, 0x83 };
-static const symbol s_5_3[4] = { 0xD0, 0xBC, 0xD1, 0x83 };
-static const symbol s_5_4[4] = { 0xD0, 0xB3, 0xD2, 0xAF };
-static const symbol s_5_5[6] = { 0xD2, 0xA3, 0xD0, 0xB3, 0xD2, 0xAF };
-static const symbol s_5_6[4] = { 0xD0, 0xBA, 0xD2, 0xAF };
-static const symbol s_5_7[4] = { 0xD0, 0xBC, 0xD2, 0xAF };
+static const symbol s_5_0[2] = { 0xD1, 0x8B };
+static const symbol s_5_1[2] = { 0xD3, 0x99 };
+static const symbol s_5_2[2] = { 0xD0, 0xB0 };
+static const symbol s_5_3[2] = { 0xD0, 0xB8 };
 
-static const struct among a_5[8] =
+static const struct among a_5[4] =
 {
-{ 4, s_5_0, -1, -1, 0},
-{ 6, s_5_1, 0, -1, 0},
-{ 4, s_5_2, -1, -1, 0},
-{ 4, s_5_3, -1, -1, 0},
-{ 4, s_5_4, -1, -1, 0},
-{ 6, s_5_5, 4, -1, 0},
-{ 4, s_5_6, -1, -1, 0},
-{ 4, s_5_7, -1, -1, 0}
+{ 2, s_5_0, -1, 2, 0},
+{ 2, s_5_1, -1, 1, 0},
+{ 2, s_5_2, -1, 1, 0},
+{ 2, s_5_3, -1, 2, 0}
 };
 
-static const symbol s_6_0[4] = { 0xD1, 0x83, 0xD1, 0x83 };
-static const symbol s_6_1[4] = { 0xD1, 0x8B, 0xD1, 0x8B };
-static const symbol s_6_2[4] = { 0xD1, 0x8D, 0xD1, 0x8D };
-static const symbol s_6_3[4] = { 0xD1, 0x8E, 0xD1, 0x8E };
-static const symbol s_6_4[4] = { 0xD1, 0x8F, 0xD1, 0x8F };
-static const symbol s_6_5[4] = { 0xD3, 0x99, 0xD3, 0x99 };
-static const symbol s_6_6[4] = { 0xD3, 0xA9, 0xD3, 0xA9 };
-static const symbol s_6_7[4] = { 0xD2, 0xAF, 0xD2, 0xAF };
-static const symbol s_6_8[4] = { 0xD0, 0xB0, 0xD0, 0xB0 };
-static const symbol s_6_9[4] = { 0xD0, 0xB5, 0xD0, 0xB5 };
-static const symbol s_6_10[4] = { 0xD0, 0xB8, 0xD0, 0xB8 };
-static const symbol s_6_11[4] = { 0xD0, 0xBE, 0xD0, 0xBE };
+static const symbol s_6_0[2] = { 0xD2, 0xBB };
 
-static const struct among a_6[12] =
+static const struct among a_6[1] =
 {
-{ 4, s_6_0, -1, 1, 0},
-{ 4, s_6_1, -1, 1, 0},
-{ 4, s_6_2, -1, 1, 0},
-{ 4, s_6_3, -1, 1, 0},
-{ 4, s_6_4, -1, 1, 0},
-{ 4, s_6_5, -1, 1, 0},
-{ 4, s_6_6, -1, 1, 0},
-{ 4, s_6_7, -1, 1, 0},
-{ 4, s_6_8, -1, 1, 0},
-{ 4, s_6_9, -1, 1, 0},
-{ 4, s_6_10, -1, 1, 0},
-{ 4, s_6_11, -1, 1, 0}
+{ 2, s_6_0, -1, 1, 0}
 };
 
-static const symbol s_7_0[4] = { 0xD1, 0x83, 0xD1, 0x80 };
-static const symbol s_7_1[8] = { 0xD2, 0xA3, 0xD0, 0xB3, 0xD1, 0x83, 0xD1, 0x80 };
-static const symbol s_7_2[6] = { 0xD2, 0xBB, 0xD1, 0x83, 0xD1, 0x80 };
-static const symbol s_7_3[4] = { 0xD3, 0x99, 0xD1, 0x80 };
-static const symbol s_7_4[8] = { 0xD2, 0xA3, 0xD0, 0xB3, 0xD3, 0x99, 0xD1, 0x80 };
-static const symbol s_7_5[6] = { 0xD2, 0xBB, 0xD3, 0x99, 0xD1, 0x80 };
-static const symbol s_7_6[4] = { 0xD2, 0xAF, 0xD1, 0x80 };
-static const symbol s_7_7[8] = { 0xD2, 0xA3, 0xD0, 0xB3, 0xD2, 0xAF, 0xD1, 0x80 };
-static const symbol s_7_8[6] = { 0xD2, 0xBB, 0xD2, 0xAF, 0xD1, 0x80 };
-static const symbol s_7_9[4] = { 0xD0, 0xB0, 0xD1, 0x80 };
-static const symbol s_7_10[8] = { 0xD2, 0xA3, 0xD0, 0xB3, 0xD0, 0xB0, 0xD1, 0x80 };
-static const symbol s_7_11[6] = { 0xD2, 0xBB, 0xD0, 0xB0, 0xD1, 0x80 };
-static const symbol s_7_12[4] = { 0xD3, 0x99, 0xD1, 0x81 };
-static const symbol s_7_13[8] = { 0xD2, 0xA3, 0xD0, 0xB3, 0xD3, 0x99, 0xD1, 0x81 };
-static const symbol s_7_14[6] = { 0xD2, 0xBB, 0xD3, 0x99, 0xD1, 0x81 };
-static const symbol s_7_15[4] = { 0xD0, 0xB0, 0xD1, 0x81 };
-static const symbol s_7_16[8] = { 0xD2, 0xA3, 0xD0, 0xB3, 0xD0, 0xB0, 0xD1, 0x81 };
-static const symbol s_7_17[6] = { 0xD2, 0xBB, 0xD0, 0xB0, 0xD1, 0x81 };
-static const symbol s_7_18[2] = { 0xD1, 0x82 };
-static const symbol s_7_19[4] = { 0xD1, 0x82, 0xD3, 0x99 };
-static const symbol s_7_20[4] = { 0xD0, 0xBB, 0xD3, 0x99 };
-static const symbol s_7_21[4] = { 0xD0, 0xBD, 0xD3, 0x99 };
-static const symbol s_7_22[4] = { 0xD1, 0x82, 0xD0, 0xB0 };
-static const symbol s_7_23[4] = { 0xD0, 0xBB, 0xD0, 0xB0 };
-static const symbol s_7_24[4] = { 0xD0, 0xBD, 0xD0, 0xB0 };
-static const symbol s_7_25[2] = { 0xD0, 0xB3 };
-static const symbol s_7_26[4] = { 0xD1, 0x8B, 0xD0, 0xB3 };
-static const symbol s_7_27[4] = { 0xD0, 0xB8, 0xD0, 0xB3 };
-static const symbol s_7_28[8] = { 0xD2, 0xA3, 0xD0, 0xB3, 0xD0, 0xB8, 0xD0, 0xB3 };
-static const symbol s_7_29[2] = { 0xD0, 0xB4 };
-static const symbol s_7_30[2] = { 0xD0, 0xBD };
-static const symbol s_7_31[4] = { 0xD1, 0x8B, 0xD0, 0xBD };
-static const symbol s_7_32[4] = { 0xD0, 0xB8, 0xD0, 0xBD };
-static const symbol s_7_33[8] = { 0xD2, 0xA3, 0xD0, 0xB3, 0xD0, 0xB8, 0xD0, 0xBD };
-static const symbol s_7_34[6] = { 0xD2, 0xBB, 0xD0, 0xB8, 0xD0, 0xBD };
+static const symbol s_7_0[2] = { 0xD1, 0x83 };
+static const symbol s_7_1[2] = { 0xD3, 0x99 };
+static const symbol s_7_2[4] = { 0xD0, 0xBB, 0xD3, 0x99 };
+static const symbol s_7_3[2] = { 0xD2, 0xAF };
+static const symbol s_7_4[2] = { 0xD0, 0xB0 };
+static const symbol s_7_5[4] = { 0xD0, 0xBB, 0xD0, 0xB0 };
 
-static const struct among a_7[35] =
+static const struct among a_7[6] =
 {
-{ 4, s_7_0, -1, 5, 0},
-{ 8, s_7_1, 0, 2, 0},
-{ 6, s_7_2, 0, 3, 0},
-{ 4, s_7_3, -1, 4, 0},
-{ 8, s_7_4, 3, 2, 0},
-{ 6, s_7_5, 3, 3, 0},
-{ 4, s_7_6, -1, 5, 0},
-{ 8, s_7_7, 6, 2, 0},
-{ 6, s_7_8, 6, 3, 0},
-{ 4, s_7_9, -1, 4, 0},
-{ 8, s_7_10, 9, 2, 0},
-{ 6, s_7_11, 9, 3, 0},
-{ 4, s_7_12, -1, 5, 0},
-{ 8, s_7_13, 12, 2, 0},
-{ 6, s_7_14, 12, 3, 0},
-{ 4, s_7_15, -1, 5, 0},
-{ 8, s_7_16, 15, 2, 0},
-{ 6, s_7_17, 15, 3, 0},
-{ 2, s_7_18, -1, 5, 0},
-{ 4, s_7_19, -1, 5, 0},
-{ 4, s_7_20, -1, 4, 0},
-{ 4, s_7_21, -1, 1, 0},
-{ 4, s_7_22, -1, 5, 0},
-{ 4, s_7_23, -1, 4, 0},
-{ 4, s_7_24, -1, 1, 0},
-{ 2, s_7_25, -1, 8, 0},
-{ 4, s_7_26, 25, 5, 0},
-{ 4, s_7_27, 25, 5, 0},
-{ 8, s_7_28, 27, 2, 0},
-{ 2, s_7_29, -1, 6, 0},
-{ 2, s_7_30, -1, 7, 0},
-{ 4, s_7_31, 30, 5, 0},
-{ 4, s_7_32, 30, 5, 0},
-{ 8, s_7_33, 32, 2, 0},
-{ 6, s_7_34, 32, 3, 0}
+{ 2, s_7_0, -1, 2, 0},
+{ 2, s_7_1, -1, 2, 0},
+{ 4, s_7_2, 1, 1, 0},
+{ 2, s_7_3, -1, 2, 0},
+{ 2, s_7_4, -1, 2, 0},
+{ 4, s_7_5, 4, 1, 0}
 };
 
-static const symbol s_8_0[4] = { 0xD0, 0xBD, 0xD1, 0x80 };
-static const symbol s_8_1[2] = { 0xD1, 0x81 };
-static const symbol s_8_2[4] = { 0xD1, 0x83, 0xD0, 0xB4 };
-static const symbol s_8_3[6] = { 0xD0, 0xB3, 0xD1, 0x83, 0xD0, 0xB4 };
-static const symbol s_8_4[8] = { 0xD2, 0xA3, 0xD0, 0xB3, 0xD1, 0x83, 0xD0, 0xB4 };
-static const symbol s_8_5[6] = { 0xD0, 0xBA, 0xD1, 0x83, 0xD0, 0xB4 };
-static const symbol s_8_6[6] = { 0xD0, 0xBC, 0xD1, 0x83, 0xD0, 0xB4 };
-static const symbol s_8_7[4] = { 0xD2, 0xAF, 0xD0, 0xB4 };
-static const symbol s_8_8[6] = { 0xD0, 0xB3, 0xD2, 0xAF, 0xD0, 0xB4 };
-static const symbol s_8_9[8] = { 0xD2, 0xA3, 0xD0, 0xB3, 0xD2, 0xAF, 0xD0, 0xB4 };
-static const symbol s_8_10[6] = { 0xD0, 0xBA, 0xD2, 0xAF, 0xD0, 0xB4 };
-static const symbol s_8_11[6] = { 0xD0, 0xBC, 0xD2, 0xAF, 0xD0, 0xB4 };
+static const symbol s_8_0[6] = { 0xD0, 0xBD, 0xD0, 0xBD, 0xD1, 0x8C };
+static const symbol s_8_1[4] = { 0xD1, 0x80, 0xD0, 0xBD };
+static const symbol s_8_2[6] = { 0xD3, 0x99, 0xD1, 0x81, 0xD0, 0xBD };
+static const symbol s_8_3[6] = { 0xD0, 0xB0, 0xD1, 0x81, 0xD0, 0xBD };
+static const symbol s_8_4[4] = { 0xD1, 0x8F, 0xD0, 0xBD };
+static const symbol s_8_5[4] = { 0xD3, 0x99, 0xD0, 0xBD };
+static const symbol s_8_6[4] = { 0xD0, 0xB0, 0xD0, 0xBD };
 
-static const struct among a_8[12] =
+static const struct among a_8[7] =
 {
-{ 4, s_8_0, -1, 4, 0},
-{ 2, s_8_1, -1, 4, 0},
-{ 4, s_8_2, -1, 4, 0},
-{ 6, s_8_3, 2, 2, 0},
-{ 8, s_8_4, 3, 1, 0},
-{ 6, s_8_5, 2, 3, 0},
-{ 6, s_8_6, 2, 4, 0},
-{ 4, s_8_7, -1, 4, 0},
-{ 6, s_8_8, 7, 2, 0},
-{ 8, s_8_9, 8, 1, 0},
-{ 6, s_8_10, 7, 3, 0},
-{ 6, s_8_11, 7, 4, 0}
+{ 6, s_8_0, -1, 1, 0},
+{ 4, s_8_1, -1, 3, 0},
+{ 6, s_8_2, -1, 5, 0},
+{ 6, s_8_3, -1, 4, 0},
+{ 4, s_8_4, -1, 2, 0},
+{ 4, s_8_5, -1, 2, 0},
+{ 4, s_8_6, -1, 2, 0}
 };
 
-static const symbol s_9_0[4] = { 0xD1, 0x8B, 0xD0, 0xBD };
-static const symbol s_9_1[4] = { 0xD3, 0x99, 0xD0, 0xBD };
-static const symbol s_9_2[4] = { 0xD0, 0xB0, 0xD0, 0xBD };
-static const symbol s_9_3[4] = { 0xD0, 0xB8, 0xD0, 0xBD };
+static const symbol s_9_0[4] = { 0xD1, 0x83, 0xD1, 0x83 };
+static const symbol s_9_1[4] = { 0xD1, 0x8B, 0xD1, 0x8B };
+static const symbol s_9_2[4] = { 0xD1, 0x8D, 0xD1, 0x8D };
+static const symbol s_9_3[4] = { 0xD1, 0x8E, 0xD1, 0x8E };
+static const symbol s_9_4[4] = { 0xD1, 0x8F, 0xD1, 0x8F };
+static const symbol s_9_5[4] = { 0xD3, 0x99, 0xD3, 0x99 };
+static const symbol s_9_6[4] = { 0xD3, 0xA9, 0xD3, 0xA9 };
+static const symbol s_9_7[4] = { 0xD2, 0xAF, 0xD2, 0xAF };
+static const symbol s_9_8[4] = { 0xD0, 0xB0, 0xD0, 0xB0 };
+static const symbol s_9_9[4] = { 0xD0, 0xB5, 0xD0, 0xB5 };
+static const symbol s_9_10[4] = { 0xD0, 0xB8, 0xD0, 0xB8 };
+static const symbol s_9_11[4] = { 0xD0, 0xBE, 0xD0, 0xBE };
 
-static const struct among a_9[4] =
+static const struct among a_9[12] =
 {
-{ 4, s_9_0, -1, -1, 0},
-{ 4, s_9_1, -1, -1, 0},
-{ 4, s_9_2, -1, -1, 0},
-{ 4, s_9_3, -1, -1, 0}
+{ 4, s_9_0, -1, 1, 0},
+{ 4, s_9_1, -1, 1, 0},
+{ 4, s_9_2, -1, 1, 0},
+{ 4, s_9_3, -1, 1, 0},
+{ 4, s_9_4, -1, 1, 0},
+{ 4, s_9_5, -1, 1, 0},
+{ 4, s_9_6, -1, 1, 0},
+{ 4, s_9_7, -1, 1, 0},
+{ 4, s_9_8, -1, 1, 0},
+{ 4, s_9_9, -1, 1, 0},
+{ 4, s_9_10, -1, 1, 0},
+{ 4, s_9_11, -1, 1, 0}
 };
 
-static const symbol s_10_0[4] = { 0xD0, 0xBD, 0xD1, 0x8C };
-static const symbol s_10_1[2] = { 0xD0, 0xBC };
-static const symbol s_10_2[4] = { 0xD1, 0x82, 0xD0, 0xBD };
-static const symbol s_10_3[4] = { 0xD1, 0x87, 0xD0, 0xBD };
-static const symbol s_10_4[6] = { 0xD0, 0xBC, 0xD0, 0xB4, 0xD0, 0xBD };
+static const symbol s_10_0[4] = { 0xD1, 0x82, 0xD3, 0x99 };
+static const symbol s_10_1[4] = { 0xD0, 0xBD, 0xD3, 0x99 };
+static const symbol s_10_2[4] = { 0xD1, 0x82, 0xD0, 0xB0 };
+static const symbol s_10_3[4] = { 0xD0, 0xBD, 0xD0, 0xB0 };
+static const symbol s_10_4[8] = { 0xD2, 0xA3, 0xD0, 0xB3, 0xD0, 0xB8, 0xD0, 0xBD };
+static const symbol s_10_5[6] = { 0xD2, 0xBB, 0xD0, 0xB8, 0xD0, 0xBD };
 
-static const struct among a_10[5] =
+static const struct among a_10[6] =
 {
-{ 4, s_10_0, -1, 1, 0},
-{ 2, s_10_1, -1, 2, 0},
-{ 4, s_10_2, -1, 2, 0},
-{ 4, s_10_3, -1, 2, 0},
-{ 6, s_10_4, -1, 2, 0}
+{ 4, s_10_0, -1, 4, 0},
+{ 4, s_10_1, -1, 1, 0},
+{ 4, s_10_2, -1, 4, 0},
+{ 4, s_10_3, -1, 1, 0},
+{ 8, s_10_4, -1, 2, 0},
+{ 6, s_10_5, -1, 3, 0}
 };
 
-static const symbol s_11_0[2] = { 0xD1, 0x8B };
-static const symbol s_11_1[2] = { 0xD3, 0x99 };
-static const symbol s_11_2[2] = { 0xD0, 0xB0 };
-static const symbol s_11_3[2] = { 0xD0, 0xB8 };
+static const symbol s_11_0[4] = { 0xD1, 0x83, 0xD1, 0x83 };
+static const symbol s_11_1[4] = { 0xD1, 0x8B, 0xD1, 0x8B };
+static const symbol s_11_2[4] = { 0xD1, 0x8D, 0xD1, 0x8D };
+static const symbol s_11_3[4] = { 0xD1, 0x8E, 0xD1, 0x8E };
+static const symbol s_11_4[4] = { 0xD1, 0x8F, 0xD1, 0x8F };
+static const symbol s_11_5[4] = { 0xD3, 0x99, 0xD3, 0x99 };
+static const symbol s_11_6[4] = { 0xD3, 0xA9, 0xD3, 0xA9 };
+static const symbol s_11_7[4] = { 0xD2, 0xAF, 0xD2, 0xAF };
+static const symbol s_11_8[4] = { 0xD0, 0xB0, 0xD0, 0xB0 };
+static const symbol s_11_9[4] = { 0xD0, 0xB5, 0xD0, 0xB5 };
+static const symbol s_11_10[4] = { 0xD0, 0xB8, 0xD0, 0xB8 };
+static const symbol s_11_11[4] = { 0xD0, 0xBE, 0xD0, 0xBE };
 
-static const struct among a_11[4] =
+static const struct among a_11[12] =
 {
-{ 2, s_11_0, -1, 2, 0},
-{ 2, s_11_1, -1, 1, 0},
-{ 2, s_11_2, -1, 1, 0},
-{ 2, s_11_3, -1, 2, 0}
+{ 4, s_11_0, -1, 1, 0},
+{ 4, s_11_1, -1, 1, 0},
+{ 4, s_11_2, -1, 1, 0},
+{ 4, s_11_3, -1, 1, 0},
+{ 4, s_11_4, -1, 1, 0},
+{ 4, s_11_5, -1, 1, 0},
+{ 4, s_11_6, -1, 1, 0},
+{ 4, s_11_7, -1, 1, 0},
+{ 4, s_11_8, -1, 1, 0},
+{ 4, s_11_9, -1, 1, 0},
+{ 4, s_11_10, -1, 1, 0},
+{ 4, s_11_11, -1, 1, 0}
 };
 
-static const symbol s_12_0[2] = { 0xD1, 0x83 };
-static const symbol s_12_1[2] = { 0xD3, 0x99 };
-static const symbol s_12_2[4] = { 0xD0, 0xBB, 0xD3, 0x99 };
-static const symbol s_12_3[2] = { 0xD2, 0xAF };
-static const symbol s_12_4[2] = { 0xD0, 0xB0 };
-static const symbol s_12_5[4] = { 0xD0, 0xBB, 0xD0, 0xB0 };
+static const symbol s_12_0[4] = { 0xD1, 0x83, 0xD1, 0x83 };
+static const symbol s_12_1[4] = { 0xD1, 0x8B, 0xD1, 0x8B };
+static const symbol s_12_2[4] = { 0xD1, 0x8D, 0xD1, 0x8D };
+static const symbol s_12_3[4] = { 0xD1, 0x8E, 0xD1, 0x8E };
+static const symbol s_12_4[4] = { 0xD1, 0x8F, 0xD1, 0x8F };
+static const symbol s_12_5[4] = { 0xD3, 0x99, 0xD3, 0x99 };
+static const symbol s_12_6[4] = { 0xD3, 0xA9, 0xD3, 0xA9 };
+static const symbol s_12_7[4] = { 0xD2, 0xAF, 0xD2, 0xAF };
+static const symbol s_12_8[4] = { 0xD0, 0xB0, 0xD0, 0xB0 };
+static const symbol s_12_9[4] = { 0xD0, 0xB5, 0xD0, 0xB5 };
+static const symbol s_12_10[4] = { 0xD0, 0xB8, 0xD0, 0xB8 };
+static const symbol s_12_11[4] = { 0xD0, 0xBE, 0xD0, 0xBE };
 
-static const struct among a_12[6] =
+static const struct among a_12[12] =
 {
-{ 2, s_12_0, -1, 2, 0},
-{ 2, s_12_1, -1, 2, 0},
-{ 4, s_12_2, 1, 1, 0},
-{ 2, s_12_3, -1, 2, 0},
-{ 2, s_12_4, -1, 2, 0},
-{ 4, s_12_5, 4, 1, 0}
+{ 4, s_12_0, -1, 1, 0},
+{ 4, s_12_1, -1, 1, 0},
+{ 4, s_12_2, -1, 1, 0},
+{ 4, s_12_3, -1, 1, 0},
+{ 4, s_12_4, -1, 1, 0},
+{ 4, s_12_5, -1, 1, 0},
+{ 4, s_12_6, -1, 1, 0},
+{ 4, s_12_7, -1, 1, 0},
+{ 4, s_12_8, -1, 1, 0},
+{ 4, s_12_9, -1, 1, 0},
+{ 4, s_12_10, -1, 1, 0},
+{ 4, s_12_11, -1, 1, 0}
 };
 
-static const symbol s_13_0[6] = { 0xD0, 0xBD, 0xD0, 0xBD, 0xD1, 0x8C };
-static const symbol s_13_1[4] = { 0xD1, 0x80, 0xD0, 0xBD };
-static const symbol s_13_2[6] = { 0xD3, 0x99, 0xD1, 0x81, 0xD0, 0xBD };
-static const symbol s_13_3[6] = { 0xD0, 0xB0, 0xD1, 0x81, 0xD0, 0xBD };
-static const symbol s_13_4[4] = { 0xD3, 0x99, 0xD0, 0xBD };
-static const symbol s_13_5[4] = { 0xD0, 0xB0, 0xD0, 0xBD };
+static const symbol s_13_0[4] = { 0xD1, 0x83, 0xD1, 0x83 };
+static const symbol s_13_1[4] = { 0xD1, 0x8B, 0xD1, 0x8B };
+static const symbol s_13_2[4] = { 0xD1, 0x8D, 0xD1, 0x8D };
+static const symbol s_13_3[4] = { 0xD1, 0x8E, 0xD1, 0x8E };
+static const symbol s_13_4[4] = { 0xD1, 0x8F, 0xD1, 0x8F };
+static const symbol s_13_5[4] = { 0xD3, 0x99, 0xD3, 0x99 };
+static const symbol s_13_6[4] = { 0xD3, 0xA9, 0xD3, 0xA9 };
+static const symbol s_13_7[4] = { 0xD2, 0xAF, 0xD2, 0xAF };
+static const symbol s_13_8[4] = { 0xD0, 0xB0, 0xD0, 0xB0 };
+static const symbol s_13_9[4] = { 0xD0, 0xB5, 0xD0, 0xB5 };
+static const symbol s_13_10[4] = { 0xD0, 0xB8, 0xD0, 0xB8 };
+static const symbol s_13_11[4] = { 0xD0, 0xBE, 0xD0, 0xBE };
 
-static const struct among a_13[6] =
+static const struct among a_13[12] =
 {
-{ 6, s_13_0, -1, 1, 0},
-{ 4, s_13_1, -1, 3, 0},
-{ 6, s_13_2, -1, 5, 0},
-{ 6, s_13_3, -1, 4, 0},
-{ 4, s_13_4, -1, 2, 0},
-{ 4, s_13_5, -1, 2, 0}
+{ 4, s_13_0, -1, 1, 0},
+{ 4, s_13_1, -1, 1, 0},
+{ 4, s_13_2, -1, 1, 0},
+{ 4, s_13_3, -1, 1, 0},
+{ 4, s_13_4, -1, 1, 0},
+{ 4, s_13_5, -1, 1, 0},
+{ 4, s_13_6, -1, 1, 0},
+{ 4, s_13_7, -1, 1, 0},
+{ 4, s_13_8, -1, 1, 0},
+{ 4, s_13_9, -1, 1, 0},
+{ 4, s_13_10, -1, 1, 0},
+{ 4, s_13_11, -1, 1, 0}
 };
 
 static const symbol s_14_0[4] = { 0xD1, 0x83, 0xD1, 0x83 };
@@ -411,386 +335,515 @@ static const struct among a_14[12] =
 { 4, s_14_11, -1, 1, 0}
 };
 
-static const symbol s_15_0[4] = { 0xD1, 0x82, 0xD3, 0x99 };
-static const symbol s_15_1[4] = { 0xD0, 0xBD, 0xD3, 0x99 };
-static const symbol s_15_2[4] = { 0xD1, 0x82, 0xD0, 0xB0 };
-static const symbol s_15_3[4] = { 0xD0, 0xBD, 0xD0, 0xB0 };
-static const symbol s_15_4[8] = { 0xD2, 0xA3, 0xD0, 0xB3, 0xD0, 0xB8, 0xD0, 0xBD };
-static const symbol s_15_5[6] = { 0xD2, 0xBB, 0xD0, 0xB8, 0xD0, 0xBD };
+static const symbol s_15_0[2] = { 0xD1, 0x85 };
 
-static const struct among a_15[6] =
+static const struct among a_15[1] =
 {
-{ 4, s_15_0, -1, 4, 0},
-{ 4, s_15_1, -1, 1, 0},
-{ 4, s_15_2, -1, 4, 0},
-{ 4, s_15_3, -1, 1, 0},
-{ 8, s_15_4, -1, 2, 0},
-{ 6, s_15_5, -1, 3, 0}
+{ 2, s_15_0, -1, -1, 0}
 };
 
-static const symbol s_16_0[2] = { 0xD1, 0x83 };
-static const symbol s_16_1[2] = { 0xD2, 0xAF };
+static const symbol s_16_0[4] = { 0xD1, 0x87, 0xD1, 0x83 };
+static const symbol s_16_1[4] = { 0xD0, 0xB3, 0xD1, 0x83 };
+static const symbol s_16_2[6] = { 0xD2, 0xA3, 0xD0, 0xB3, 0xD1, 0x83 };
+static const symbol s_16_3[4] = { 0xD0, 0xB4, 0xD1, 0x83 };
+static const symbol s_16_4[4] = { 0xD0, 0xBA, 0xD1, 0x83 };
+static const symbol s_16_5[4] = { 0xD0, 0xBC, 0xD1, 0x83 };
+static const symbol s_16_6[4] = { 0xD1, 0x87, 0xD2, 0xAF };
+static const symbol s_16_7[4] = { 0xD0, 0xB3, 0xD2, 0xAF };
+static const symbol s_16_8[6] = { 0xD2, 0xA3, 0xD0, 0xB3, 0xD2, 0xAF };
+static const symbol s_16_9[4] = { 0xD0, 0xB4, 0xD2, 0xAF };
+static const symbol s_16_10[4] = { 0xD0, 0xBA, 0xD2, 0xAF };
+static const symbol s_16_11[4] = { 0xD0, 0xBC, 0xD2, 0xAF };
 
-static const struct among a_16[2] =
+static const struct among a_16[12] =
 {
-{ 2, s_16_0, -1, 1, 0},
-{ 2, s_16_1, -1, 1, 0}
+{ 4, s_16_0, -1, -1, 0},
+{ 4, s_16_1, -1, -1, 0},
+{ 6, s_16_2, 1, -1, 0},
+{ 4, s_16_3, -1, -1, 0},
+{ 4, s_16_4, -1, -1, 0},
+{ 4, s_16_5, -1, -1, 0},
+{ 4, s_16_6, -1, -1, 0},
+{ 4, s_16_7, -1, -1, 0},
+{ 6, s_16_8, 7, -1, 0},
+{ 4, s_16_9, -1, -1, 0},
+{ 4, s_16_10, -1, -1, 0},
+{ 4, s_16_11, -1, -1, 0}
 };
 
-static const symbol s_17_0[2] = { 0xD1, 0x82 };
-static const symbol s_17_1[2] = { 0xD1, 0x87 };
-static const symbol s_17_2[2] = { 0xD0, 0xB2 };
-static const symbol s_17_3[8] = { 0xD0, 0xB2, 0xD0, 0xB8, 0xD0, 0xB4, 0xD0, 0xBD };
+static const symbol s_17_0[4] = { 0xD1, 0x83, 0xD1, 0x83 };
+static const symbol s_17_1[4] = { 0xD1, 0x8B, 0xD1, 0x8B };
+static const symbol s_17_2[4] = { 0xD1, 0x8D, 0xD1, 0x8D };
+static const symbol s_17_3[4] = { 0xD1, 0x8E, 0xD1, 0x8E };
+static const symbol s_17_4[4] = { 0xD1, 0x8F, 0xD1, 0x8F };
+static const symbol s_17_5[4] = { 0xD3, 0x99, 0xD3, 0x99 };
+static const symbol s_17_6[4] = { 0xD3, 0xA9, 0xD3, 0xA9 };
+static const symbol s_17_7[4] = { 0xD2, 0xAF, 0xD2, 0xAF };
+static const symbol s_17_8[4] = { 0xD0, 0xB0, 0xD0, 0xB0 };
+static const symbol s_17_9[4] = { 0xD0, 0xB5, 0xD0, 0xB5 };
+static const symbol s_17_10[4] = { 0xD0, 0xB8, 0xD0, 0xB8 };
+static const symbol s_17_11[4] = { 0xD0, 0xBE, 0xD0, 0xBE };
 
-static const struct among a_17[4] =
+static const struct among a_17[12] =
 {
-{ 2, s_17_0, -1, 2, 0},
-{ 2, s_17_1, -1, 2, 0},
-{ 2, s_17_2, -1, 1, 0},
-{ 8, s_17_3, -1, 1, 0}
+{ 4, s_17_0, -1, 1, 0},
+{ 4, s_17_1, -1, 1, 0},
+{ 4, s_17_2, -1, 1, 0},
+{ 4, s_17_3, -1, 1, 0},
+{ 4, s_17_4, -1, 1, 0},
+{ 4, s_17_5, -1, 1, 0},
+{ 4, s_17_6, -1, 1, 0},
+{ 4, s_17_7, -1, 1, 0},
+{ 4, s_17_8, -1, 1, 0},
+{ 4, s_17_9, -1, 1, 0},
+{ 4, s_17_10, -1, 1, 0},
+{ 4, s_17_11, -1, 1, 0}
 };
 
-static const symbol s_18_0[2] = { 0xD1, 0x85 };
+static const symbol s_18_0[4] = { 0xD1, 0x83, 0xD1, 0x80 };
+static const symbol s_18_1[8] = { 0xD2, 0xA3, 0xD0, 0xB3, 0xD1, 0x83, 0xD1, 0x80 };
+static const symbol s_18_2[6] = { 0xD2, 0xBB, 0xD1, 0x83, 0xD1, 0x80 };
+static const symbol s_18_3[4] = { 0xD3, 0x99, 0xD1, 0x80 };
+static const symbol s_18_4[8] = { 0xD2, 0xA3, 0xD0, 0xB3, 0xD3, 0x99, 0xD1, 0x80 };
+static const symbol s_18_5[6] = { 0xD2, 0xBB, 0xD3, 0x99, 0xD1, 0x80 };
+static const symbol s_18_6[4] = { 0xD2, 0xAF, 0xD1, 0x80 };
+static const symbol s_18_7[8] = { 0xD2, 0xA3, 0xD0, 0xB3, 0xD2, 0xAF, 0xD1, 0x80 };
+static const symbol s_18_8[6] = { 0xD2, 0xBB, 0xD2, 0xAF, 0xD1, 0x80 };
+static const symbol s_18_9[4] = { 0xD0, 0xB0, 0xD1, 0x80 };
+static const symbol s_18_10[8] = { 0xD2, 0xA3, 0xD0, 0xB3, 0xD0, 0xB0, 0xD1, 0x80 };
+static const symbol s_18_11[6] = { 0xD2, 0xBB, 0xD0, 0xB0, 0xD1, 0x80 };
+static const symbol s_18_12[4] = { 0xD3, 0x99, 0xD1, 0x81 };
+static const symbol s_18_13[8] = { 0xD2, 0xA3, 0xD0, 0xB3, 0xD3, 0x99, 0xD1, 0x81 };
+static const symbol s_18_14[6] = { 0xD2, 0xBB, 0xD3, 0x99, 0xD1, 0x81 };
+static const symbol s_18_15[4] = { 0xD0, 0xB0, 0xD1, 0x81 };
+static const symbol s_18_16[8] = { 0xD2, 0xA3, 0xD0, 0xB3, 0xD0, 0xB0, 0xD1, 0x81 };
+static const symbol s_18_17[6] = { 0xD2, 0xBB, 0xD0, 0xB0, 0xD1, 0x81 };
+static const symbol s_18_18[2] = { 0xD1, 0x82 };
+static const symbol s_18_19[4] = { 0xD1, 0x82, 0xD3, 0x99 };
+static const symbol s_18_20[4] = { 0xD0, 0xBB, 0xD3, 0x99 };
+static const symbol s_18_21[4] = { 0xD0, 0xBD, 0xD3, 0x99 };
+static const symbol s_18_22[4] = { 0xD1, 0x82, 0xD0, 0xB0 };
+static const symbol s_18_23[4] = { 0xD0, 0xBB, 0xD0, 0xB0 };
+static const symbol s_18_24[4] = { 0xD0, 0xBD, 0xD0, 0xB0 };
+static const symbol s_18_25[2] = { 0xD0, 0xB3 };
+static const symbol s_18_26[4] = { 0xD1, 0x8B, 0xD0, 0xB3 };
+static const symbol s_18_27[4] = { 0xD0, 0xB8, 0xD0, 0xB3 };
+static const symbol s_18_28[8] = { 0xD2, 0xA3, 0xD0, 0xB3, 0xD0, 0xB8, 0xD0, 0xB3 };
+static const symbol s_18_29[2] = { 0xD0, 0xB4 };
+static const symbol s_18_30[2] = { 0xD0, 0xBD };
+static const symbol s_18_31[4] = { 0xD1, 0x8B, 0xD0, 0xBD };
+static const symbol s_18_32[4] = { 0xD0, 0xB8, 0xD0, 0xBD };
+static const symbol s_18_33[8] = { 0xD2, 0xA3, 0xD0, 0xB3, 0xD0, 0xB8, 0xD0, 0xBD };
+static const symbol s_18_34[6] = { 0xD2, 0xBB, 0xD0, 0xB8, 0xD0, 0xBD };
 
-static const struct among a_18[1] =
+static const struct among a_18[35] =
 {
-{ 2, s_18_0, -1, -1, 0}
+{ 4, s_18_0, -1, 7, 0},
+{ 8, s_18_1, 0, 2, 0},
+{ 6, s_18_2, 0, 5, 0},
+{ 4, s_18_3, -1, 6, 0},
+{ 8, s_18_4, 3, 2, 0},
+{ 6, s_18_5, 3, 4, 0},
+{ 4, s_18_6, -1, 7, 0},
+{ 8, s_18_7, 6, 2, 0},
+{ 6, s_18_8, 6, 5, 0},
+{ 4, s_18_9, -1, 6, 0},
+{ 8, s_18_10, 9, 2, 0},
+{ 6, s_18_11, 9, 4, 0},
+{ 4, s_18_12, -1, 7, 0},
+{ 8, s_18_13, 12, 2, 0},
+{ 6, s_18_14, 12, 5, 0},
+{ 4, s_18_15, -1, 7, 0},
+{ 8, s_18_16, 15, 2, 0},
+{ 6, s_18_17, 15, 5, 0},
+{ 2, s_18_18, -1, 7, 0},
+{ 4, s_18_19, -1, 7, 0},
+{ 4, s_18_20, -1, 6, 0},
+{ 4, s_18_21, -1, 1, 0},
+{ 4, s_18_22, -1, 7, 0},
+{ 4, s_18_23, -1, 6, 0},
+{ 4, s_18_24, -1, 1, 0},
+{ 2, s_18_25, -1, 10, 0},
+{ 4, s_18_26, 25, 7, 0},
+{ 4, s_18_27, 25, 7, 0},
+{ 8, s_18_28, 27, 2, 0},
+{ 2, s_18_29, -1, 8, 0},
+{ 2, s_18_30, -1, 9, 0},
+{ 4, s_18_31, 30, 7, 0},
+{ 4, s_18_32, 30, 7, 0},
+{ 8, s_18_33, 32, 2, 0},
+{ 6, s_18_34, 32, 3, 0}
 };
 
-static const symbol s_19_0[6] = { 0xD1, 0x81, 0xD3, 0x99, 0xD1, 0x80 };
-static const symbol s_19_1[6] = { 0xD1, 0x81, 0xD0, 0xB0, 0xD1, 0x80 };
+static const symbol s_19_0[2] = { 0xD3, 0x99 };
+static const symbol s_19_1[2] = { 0xD0, 0xB0 };
 
 static const struct among a_19[2] =
 {
-{ 6, s_19_0, -1, -1, 0},
-{ 6, s_19_1, -1, -1, 0}
+{ 2, s_19_0, -1, 1, 0},
+{ 2, s_19_1, -1, 1, 0}
 };
 
-static const symbol s_20_0[2] = { 0xD0, 0xB4 };
+static const symbol s_20_0[4] = { 0xD0, 0xBB, 0xD2, 0xBB };
 
 static const struct among a_20[1] =
 {
-{ 2, s_20_0, -1, -1, 0}
+{ 4, s_20_0, -1, 1, 0}
 };
 
-static const symbol s_21_0[2] = { 0xD1, 0x81 };
-static const symbol s_21_1[4] = { 0xD1, 0x81, 0xD1, 0x83 };
-static const symbol s_21_2[2] = { 0xD1, 0x87 };
-static const symbol s_21_3[4] = { 0xD0, 0xB8, 0xD1, 0x8F };
-static const symbol s_21_4[2] = { 0xD2, 0x97 };
-static const symbol s_21_5[2] = { 0xD3, 0x99 };
-static const symbol s_21_6[4] = { 0xD1, 0x81, 0xD3, 0x99 };
-static const symbol s_21_7[6] = { 0xD1, 0x82, 0xD1, 0x85, 0xD3, 0x99 };
-static const symbol s_21_8[6] = { 0xD0, 0xB2, 0xD0, 0xB7, 0xD3, 0x99 };
-static const symbol s_21_9[4] = { 0xD0, 0xBB, 0xD3, 0x99 };
-static const symbol s_21_10[4] = { 0xD0, 0xBD, 0xD3, 0x99 };
-static const symbol s_21_11[8] = { 0xD2, 0x97, 0xD3, 0x99, 0xD0, 0xBD, 0xD3, 0x99 };
-static const symbol s_21_12[4] = { 0xD1, 0x81, 0xD2, 0xAF };
-static const symbol s_21_13[2] = { 0xD0, 0xB0 };
-static const symbol s_21_14[4] = { 0xD1, 0x81, 0xD0, 0xB0 };
-static const symbol s_21_15[6] = { 0xD1, 0x82, 0xD1, 0x85, 0xD0, 0xB0 };
-static const symbol s_21_16[6] = { 0xD0, 0xB2, 0xD0, 0xB7, 0xD0, 0xB0 };
-static const symbol s_21_17[4] = { 0xD0, 0xBB, 0xD0, 0xB0 };
-static const symbol s_21_18[4] = { 0xD0, 0xBD, 0xD0, 0xB0 };
-static const symbol s_21_19[8] = { 0xD1, 0x87, 0xD0, 0xB0, 0xD0, 0xBD, 0xD0, 0xB0 };
-static const symbol s_21_20[8] = { 0xD2, 0x97, 0xD0, 0xB0, 0xD0, 0xBD, 0xD0, 0xB0 };
-static const symbol s_21_21[2] = { 0xD0, 0xB2 };
-static const symbol s_21_22[2] = { 0xD0, 0xB3 };
-static const symbol s_21_23[2] = { 0xD0, 0xB9 };
-static const symbol s_21_24[4] = { 0xD0, 0xB8, 0xD0, 0xB9 };
-static const symbol s_21_25[4] = { 0xD1, 0x81, 0xD0, 0xBD };
-static const symbol s_21_26[4] = { 0xD1, 0x82, 0xD0, 0xBD };
-static const symbol s_21_27[6] = { 0xD1, 0x81, 0xD0, 0xBC, 0xD0, 0xBD };
+static const symbol s_21_0[4] = { 0xD0, 0xB2, 0xD1, 0x80 };
+static const symbol s_21_1[4] = { 0xD0, 0xBB, 0xD1, 0x82 };
+static const symbol s_21_2[4] = { 0xD0, 0xB4, 0xD0, 0xB3 };
+static const symbol s_21_3[4] = { 0xD0, 0xB4, 0xD0, 0xBB };
+static const symbol s_21_4[4] = { 0xD0, 0xBB, 0xD2, 0xBB };
+static const symbol s_21_5[4] = { 0xD1, 0x81, 0xD0, 0xBD };
+static const symbol s_21_6[6] = { 0xD0, 0xBB, 0xD2, 0xBB, 0xD0, 0xBD };
 
-static const struct among a_21[28] =
+static const struct among a_21[7] =
 {
-{ 2, s_21_0, -1, 4, 0},
-{ 4, s_21_1, -1, 4, 0},
-{ 2, s_21_2, -1, 4, 0},
-{ 4, s_21_3, -1, 4, 0},
-{ 2, s_21_4, -1, 4, 0},
-{ 2, s_21_5, -1, 2, 0},
-{ 4, s_21_6, 5, 4, 0},
-{ 6, s_21_7, 5, 4, 0},
-{ 6, s_21_8, 5, 4, 0},
-{ 4, s_21_9, 5, 1, 0},
-{ 4, s_21_10, 5, 4, 0},
-{ 8, s_21_11, 10, 4, 0},
-{ 4, s_21_12, -1, 4, 0},
-{ 2, s_21_13, -1, 2, 0},
-{ 4, s_21_14, 13, 4, 0},
-{ 6, s_21_15, 13, 4, 0},
-{ 6, s_21_16, 13, 4, 0},
-{ 4, s_21_17, 13, 1, 0},
-{ 4, s_21_18, 13, 4, 0},
-{ 8, s_21_19, 18, 4, 0},
-{ 8, s_21_20, 18, 4, 0},
-{ 2, s_21_21, -1, 4, 0},
-{ 2, s_21_22, -1, 3, 0},
-{ 2, s_21_23, -1, 4, 0},
-{ 4, s_21_24, 23, 4, 0},
-{ 4, s_21_25, -1, 4, 0},
-{ 4, s_21_26, -1, 4, 0},
-{ 6, s_21_27, -1, 4, 0}
+{ 4, s_21_0, -1, 3, 0},
+{ 4, s_21_1, -1, 2, 0},
+{ 4, s_21_2, -1, 2, 0},
+{ 4, s_21_3, -1, 2, 0},
+{ 4, s_21_4, -1, 2, 0},
+{ 4, s_21_5, -1, 2, 0},
+{ 6, s_21_6, -1, 1, 0}
 };
 
-static const symbol s_22_0[6] = { 0xD1, 0x81, 0xD3, 0x99, 0xD1, 0x80 };
-static const symbol s_22_1[6] = { 0xD1, 0x81, 0xD0, 0xB0, 0xD1, 0x80 };
-static const symbol s_22_2[4] = { 0xD1, 0x85, 0xD0, 0xBB };
+static const symbol s_22_0[2] = { 0xD1, 0x81 };
+static const symbol s_22_1[2] = { 0xD1, 0x85 };
+static const symbol s_22_2[2] = { 0xD0, 0xB4 };
 
 static const struct among a_22[3] =
 {
-{ 6, s_22_0, -1, -1, 0},
-{ 6, s_22_1, -1, -1, 0},
-{ 4, s_22_2, -1, -1, 0}
+{ 2, s_22_0, -1, 1, 0},
+{ 2, s_22_1, -1, 1, 0},
+{ 2, s_22_2, -1, 1, 0}
 };
 
-static const symbol s_23_0[4] = { 0xD0, 0xB4, 0xD1, 0x85 };
-static const symbol s_23_1[4] = { 0xD0, 0xBB, 0xD1, 0x86 };
-static const symbol s_23_2[2] = { 0xD3, 0x99 };
-static const symbol s_23_3[6] = { 0xD1, 0x86, 0xD1, 0x85, 0xD3, 0x99 };
-static const symbol s_23_4[4] = { 0xD2, 0x97, 0xD3, 0x99 };
-static const symbol s_23_5[2] = { 0xD0, 0xB0 };
-static const symbol s_23_6[6] = { 0xD1, 0x86, 0xD1, 0x85, 0xD0, 0xB0 };
-static const symbol s_23_7[4] = { 0xD2, 0x97, 0xD0, 0xB0 };
-static const symbol s_23_8[4] = { 0xD1, 0x80, 0xD0, 0xB3 };
-static const symbol s_23_9[4] = { 0xD0, 0xB3, 0xD0, 0xB4 };
-static const symbol s_23_10[4] = { 0xD0, 0xBB, 0xD0, 0xB4 };
-static const symbol s_23_11[4] = { 0xD1, 0x81, 0xD0, 0xBA };
-static const symbol s_23_12[4] = { 0xD1, 0x87, 0xD0, 0xBA };
-static const symbol s_23_13[4] = { 0xD1, 0x83, 0xD0, 0xBB };
-static const symbol s_23_14[4] = { 0xD2, 0xAF, 0xD0, 0xBB };
-static const symbol s_23_15[4] = { 0xD0, 0xBB, 0xD2, 0xBB };
+static const symbol s_23_0[2] = { 0xD1, 0x81 };
+static const symbol s_23_1[2] = { 0xD1, 0x85 };
+static const symbol s_23_2[2] = { 0xD0, 0xB4 };
 
-static const struct among a_23[16] =
+static const struct among a_23[3] =
 {
-{ 4, s_23_0, -1, 4, 0},
-{ 4, s_23_1, -1, 2, 0},
-{ 2, s_23_2, -1, 1, 0},
-{ 6, s_23_3, 2, 2, 0},
-{ 4, s_23_4, 2, 2, 0},
-{ 2, s_23_5, -1, 1, 0},
-{ 6, s_23_6, 5, 2, 0},
-{ 4, s_23_7, 5, 2, 0},
-{ 4, s_23_8, -1, 3, 0},
-{ 4, s_23_9, -1, 2, 0},
-{ 4, s_23_10, -1, 2, 0},
-{ 4, s_23_11, -1, 5, 0},
-{ 4, s_23_12, -1, 2, 0},
-{ 4, s_23_13, -1, 2, 0},
-{ 4, s_23_14, -1, 2, 0},
-{ 4, s_23_15, -1, 2, 0}
+{ 2, s_23_0, -1, 1, 0},
+{ 2, s_23_1, -1, 1, 0},
+{ 2, s_23_2, -1, 1, 0}
 };
 
-static const symbol s_24_0[6] = { 0xD1, 0x85, 0xD3, 0x99, 0xD1, 0x80 };
-static const symbol s_24_1[6] = { 0xD1, 0x85, 0xD0, 0xB0, 0xD1, 0x80 };
-static const symbol s_24_2[4] = { 0xD0, 0xB3, 0xD1, 0x87 };
-static const symbol s_24_3[8] = { 0xD1, 0x81, 0xD3, 0x99, 0xD1, 0x80, 0xD3, 0x99 };
-static const symbol s_24_4[6] = { 0xD1, 0x85, 0xD0, 0xBB, 0xD3, 0x99 };
-static const symbol s_24_5[8] = { 0xD1, 0x81, 0xD0, 0xB0, 0xD1, 0x80, 0xD0, 0xB0 };
-static const symbol s_24_6[6] = { 0xD1, 0x85, 0xD0, 0xBB, 0xD0, 0xB0 };
-static const symbol s_24_7[4] = { 0xD0, 0xB4, 0xD0, 0xB3 };
-static const symbol s_24_8[4] = { 0xD3, 0x99, 0xD0, 0xB4 };
-static const symbol s_24_9[4] = { 0xD0, 0xB0, 0xD0, 0xB4 };
-static const symbol s_24_10[4] = { 0xD1, 0x82, 0xD0, 0xBB };
-static const symbol s_24_11[10] = { 0xD1, 0x85, 0xD0, 0xBB, 0xD3, 0x99, 0xD1, 0x80, 0xD0, 0xBD };
-static const symbol s_24_12[10] = { 0xD1, 0x85, 0xD0, 0xBB, 0xD0, 0xB0, 0xD1, 0x80, 0xD0, 0xBD };
-static const symbol s_24_13[4] = { 0xD1, 0x81, 0xD0, 0xBD };
-static const symbol s_24_14[6] = { 0xD0, 0xB2, 0xD1, 0x87, 0xD0, 0xBD };
+static const symbol s_24_0[2] = { 0xD1, 0x88 };
+static const symbol s_24_1[2] = { 0xD0, 0xB4 };
+static const symbol s_24_2[2] = { 0xD0, 0xBB };
 
-static const struct among a_24[15] =
+static const struct among a_24[3] =
 {
-{ 6, s_24_0, -1, 1, 0},
-{ 6, s_24_1, -1, 1, 0},
-{ 4, s_24_2, -1, 1, 0},
-{ 8, s_24_3, -1, 1, 0},
-{ 6, s_24_4, -1, 1, 0},
-{ 8, s_24_5, -1, 1, 0},
-{ 6, s_24_6, -1, 1, 0},
-{ 4, s_24_7, -1, 1, 0},
-{ 4, s_24_8, -1, 1, 0},
-{ 4, s_24_9, -1, 1, 0},
-{ 4, s_24_10, -1, 1, 0},
-{ 10, s_24_11, -1, 1, 0},
-{ 10, s_24_12, -1, 1, 0},
-{ 4, s_24_13, -1, 1, 0},
-{ 6, s_24_14, -1, 1, 0}
+{ 2, s_24_0, -1, 1, 0},
+{ 2, s_24_1, -1, 1, 0},
+{ 2, s_24_2, -1, 1, 0}
+};
+
+static const symbol s_25_0[4] = { 0xD1, 0x85, 0xD1, 0x88 };
+static const symbol s_25_1[6] = { 0xD1, 0x85, 0xD0, 0xBD, 0xD1, 0x8C };
+static const symbol s_25_2[8] = { 0xD1, 0x85, 0xD0, 0xB8, 0xD0, 0xBD, 0xD1, 0x8C };
+static const symbol s_25_3[4] = { 0xD0, 0xBC, 0xD0, 0xB1 };
+static const symbol s_25_4[4] = { 0xD0, 0xBC, 0xD0, 0xBD };
+static const symbol s_25_5[4] = { 0xD0, 0xB3, 0xD0, 0xBE };
+
+static const struct among a_25[6] =
+{
+{ 4, s_25_0, -1, 3, 0},
+{ 6, s_25_1, -1, 4, 0},
+{ 8, s_25_2, -1, 4, 0},
+{ 4, s_25_3, -1, 1, 0},
+{ 4, s_25_4, -1, 1, 0},
+{ 4, s_25_5, -1, 2, 0}
+};
+
+static const symbol s_26_0[2] = { 0xD1, 0x83 };
+static const symbol s_26_1[2] = { 0xD2, 0xAF };
+
+static const struct among a_26[2] =
+{
+{ 2, s_26_0, -1, 1, 0},
+{ 2, s_26_1, -1, 1, 0}
+};
+
+static const symbol s_27_0[2] = { 0xD1, 0x82 };
+static const symbol s_27_1[2] = { 0xD1, 0x87 };
+static const symbol s_27_2[2] = { 0xD0, 0xB2 };
+static const symbol s_27_3[8] = { 0xD0, 0xB2, 0xD0, 0xB8, 0xD0, 0xB4, 0xD0, 0xBD };
+
+static const struct among a_27[4] =
+{
+{ 2, s_27_0, -1, 2, 0},
+{ 2, s_27_1, -1, 2, 0},
+{ 2, s_27_2, -1, 1, 0},
+{ 8, s_27_3, -1, 1, 0}
+};
+
+static const symbol s_28_0[2] = { 0xD1, 0x85 };
+
+static const struct among a_28[1] =
+{
+{ 2, s_28_0, -1, -1, 0}
+};
+
+static const symbol s_29_0[2] = { 0xD3, 0x99 };
+static const symbol s_29_1[2] = { 0xD0, 0xB0 };
+
+static const struct among a_29[2] =
+{
+{ 2, s_29_0, -1, -1, 0},
+{ 2, s_29_1, -1, -1, 0}
+};
+
+static const symbol s_30_0[4] = { 0xD1, 0x81, 0xD1, 0x83 };
+static const symbol s_30_1[2] = { 0xD1, 0x85 };
+static const symbol s_30_2[2] = { 0xD1, 0x87 };
+static const symbol s_30_3[4] = { 0xD0, 0xB8, 0xD1, 0x8F };
+static const symbol s_30_4[2] = { 0xD2, 0x97 };
+static const symbol s_30_5[4] = { 0xD1, 0x81, 0xD3, 0x99 };
+static const symbol s_30_6[6] = { 0xD1, 0x82, 0xD1, 0x85, 0xD3, 0x99 };
+static const symbol s_30_7[6] = { 0xD0, 0xB2, 0xD0, 0xB7, 0xD3, 0x99 };
+static const symbol s_30_8[4] = { 0xD0, 0xBB, 0xD3, 0x99 };
+static const symbol s_30_9[4] = { 0xD0, 0xBD, 0xD3, 0x99 };
+static const symbol s_30_10[8] = { 0xD2, 0x97, 0xD3, 0x99, 0xD0, 0xBD, 0xD3, 0x99 };
+static const symbol s_30_11[4] = { 0xD1, 0x81, 0xD2, 0xAF };
+static const symbol s_30_12[4] = { 0xD1, 0x81, 0xD0, 0xB0 };
+static const symbol s_30_13[6] = { 0xD1, 0x82, 0xD1, 0x85, 0xD0, 0xB0 };
+static const symbol s_30_14[4] = { 0xD1, 0x87, 0xD0, 0xB0 };
+static const symbol s_30_15[6] = { 0xD0, 0xB2, 0xD0, 0xB7, 0xD0, 0xB0 };
+static const symbol s_30_16[4] = { 0xD0, 0xBB, 0xD0, 0xB0 };
+static const symbol s_30_17[4] = { 0xD0, 0xBD, 0xD0, 0xB0 };
+static const symbol s_30_18[8] = { 0xD1, 0x87, 0xD0, 0xB0, 0xD0, 0xBD, 0xD0, 0xB0 };
+static const symbol s_30_19[8] = { 0xD2, 0x97, 0xD0, 0xB0, 0xD0, 0xBD, 0xD0, 0xB0 };
+static const symbol s_30_20[2] = { 0xD0, 0xB9 };
+static const symbol s_30_21[4] = { 0xD0, 0xB8, 0xD0, 0xB9 };
+static const symbol s_30_22[4] = { 0xD1, 0x81, 0xD0, 0xBD };
+static const symbol s_30_23[4] = { 0xD1, 0x82, 0xD0, 0xBD };
+static const symbol s_30_24[6] = { 0xD1, 0x81, 0xD0, 0xBC, 0xD0, 0xBD };
+
+static const struct among a_30[25] =
+{
+{ 4, s_30_0, -1, 1, 0},
+{ 2, s_30_1, -1, 1, 0},
+{ 2, s_30_2, -1, 4, 0},
+{ 4, s_30_3, -1, 1, 0},
+{ 2, s_30_4, -1, 4, 0},
+{ 4, s_30_5, -1, 1, 0},
+{ 6, s_30_6, -1, 1, 0},
+{ 6, s_30_7, -1, 1, 0},
+{ 4, s_30_8, -1, 2, 0},
+{ 4, s_30_9, -1, 4, 0},
+{ 8, s_30_10, 9, 4, 0},
+{ 4, s_30_11, -1, 1, 0},
+{ 4, s_30_12, -1, 1, 0},
+{ 6, s_30_13, -1, 1, 0},
+{ 4, s_30_14, -1, 4, 0},
+{ 6, s_30_15, -1, 1, 0},
+{ 4, s_30_16, -1, 2, 0},
+{ 4, s_30_17, -1, 4, 0},
+{ 8, s_30_18, 17, 4, 0},
+{ 8, s_30_19, 17, 4, 0},
+{ 2, s_30_20, -1, 1, 0},
+{ 4, s_30_21, 20, 1, 0},
+{ 4, s_30_22, -1, 3, 0},
+{ 4, s_30_23, -1, 1, 0},
+{ 6, s_30_24, -1, 4, 0}
+};
+
+static const symbol s_31_0[2] = { 0xD3, 0x99 };
+static const symbol s_31_1[2] = { 0xD0, 0xB0 };
+
+static const struct among a_31[2] =
+{
+{ 2, s_31_0, -1, 1, 0},
+{ 2, s_31_1, -1, 1, 0}
+};
+
+static const symbol s_32_0[4] = { 0xD0, 0xB4, 0xD1, 0x85 };
+static const symbol s_32_1[4] = { 0xD0, 0xBB, 0xD1, 0x86 };
+static const symbol s_32_2[6] = { 0xD1, 0x86, 0xD1, 0x85, 0xD3, 0x99 };
+static const symbol s_32_3[4] = { 0xD2, 0x97, 0xD3, 0x99 };
+static const symbol s_32_4[6] = { 0xD1, 0x86, 0xD1, 0x85, 0xD0, 0xB0 };
+static const symbol s_32_5[4] = { 0xD2, 0x97, 0xD0, 0xB0 };
+static const symbol s_32_6[4] = { 0xD1, 0x80, 0xD0, 0xB3 };
+static const symbol s_32_7[4] = { 0xD0, 0xB3, 0xD0, 0xB4 };
+static const symbol s_32_8[4] = { 0xD0, 0xBB, 0xD0, 0xB4 };
+static const symbol s_32_9[4] = { 0xD0, 0xBB, 0xD0, 0xB7 };
+static const symbol s_32_10[4] = { 0xD1, 0x81, 0xD0, 0xBA };
+static const symbol s_32_11[4] = { 0xD1, 0x87, 0xD0, 0xBA };
+static const symbol s_32_12[4] = { 0xD1, 0x83, 0xD0, 0xBB };
+static const symbol s_32_13[4] = { 0xD2, 0xAF, 0xD0, 0xBB };
+static const symbol s_32_14[4] = { 0xD0, 0xBB, 0xD2, 0xBB };
+
+static const struct among a_32[15] =
+{
+{ 4, s_32_0, -1, 4, 0},
+{ 4, s_32_1, -1, 2, 0},
+{ 6, s_32_2, -1, 2, 0},
+{ 4, s_32_3, -1, 2, 0},
+{ 6, s_32_4, -1, 2, 0},
+{ 4, s_32_5, -1, 2, 0},
+{ 4, s_32_6, -1, 3, 0},
+{ 4, s_32_7, -1, 1, 0},
+{ 4, s_32_8, -1, 2, 0},
+{ 4, s_32_9, -1, 2, 0},
+{ 4, s_32_10, -1, 5, 0},
+{ 4, s_32_11, -1, 2, 0},
+{ 4, s_32_12, -1, 2, 0},
+{ 4, s_32_13, -1, 2, 0},
+{ 4, s_32_14, -1, 2, 0}
+};
+
+static const symbol s_33_0[6] = { 0xD1, 0x85, 0xD3, 0x99, 0xD1, 0x80 };
+static const symbol s_33_1[6] = { 0xD2, 0xBB, 0xD3, 0x99, 0xD1, 0x80 };
+static const symbol s_33_2[6] = { 0xD1, 0x85, 0xD0, 0xB0, 0xD1, 0x80 };
+static const symbol s_33_3[6] = { 0xD2, 0xBB, 0xD0, 0xB0, 0xD1, 0x80 };
+static const symbol s_33_4[4] = { 0xD0, 0xB3, 0xD1, 0x87 };
+static const symbol s_33_5[10] = { 0xD1, 0x85, 0xD0, 0xBB, 0xD3, 0x99, 0xD0, 0xBD, 0xD1, 0x8C };
+static const symbol s_33_6[10] = { 0xD1, 0x85, 0xD0, 0xBB, 0xD0, 0xB0, 0xD0, 0xBD, 0xD1, 0x8C };
+static const symbol s_33_7[8] = { 0xD1, 0x81, 0xD3, 0x99, 0xD1, 0x80, 0xD3, 0x99 };
+static const symbol s_33_8[6] = { 0xD1, 0x85, 0xD0, 0xBB, 0xD3, 0x99 };
+static const symbol s_33_9[8] = { 0xD1, 0x81, 0xD0, 0xB0, 0xD1, 0x80, 0xD0, 0xB0 };
+static const symbol s_33_10[6] = { 0xD1, 0x85, 0xD0, 0xBB, 0xD0, 0xB0 };
+static const symbol s_33_11[6] = { 0xD1, 0x81, 0xD0, 0xBD, 0xD0, 0xB0 };
+static const symbol s_33_12[4] = { 0xD0, 0xB4, 0xD0, 0xB3 };
+static const symbol s_33_13[4] = { 0xD3, 0x99, 0xD0, 0xB4 };
+static const symbol s_33_14[6] = { 0xD2, 0xBB, 0xD3, 0x99, 0xD0, 0xB4 };
+static const symbol s_33_15[8] = { 0xD0, 0xBB, 0xD2, 0xBB, 0xD3, 0x99, 0xD0, 0xB4 };
+static const symbol s_33_16[4] = { 0xD0, 0xB0, 0xD0, 0xB4 };
+static const symbol s_33_17[6] = { 0xD2, 0xBB, 0xD0, 0xB0, 0xD0, 0xB4 };
+static const symbol s_33_18[4] = { 0xD1, 0x82, 0xD0, 0xBB };
+static const symbol s_33_19[10] = { 0xD1, 0x85, 0xD0, 0xBB, 0xD3, 0x99, 0xD1, 0x80, 0xD0, 0xBD };
+static const symbol s_33_20[10] = { 0xD1, 0x85, 0xD0, 0xBB, 0xD0, 0xB0, 0xD1, 0x80, 0xD0, 0xBD };
+static const symbol s_33_21[4] = { 0xD1, 0x81, 0xD0, 0xBD };
+static const symbol s_33_22[6] = { 0xD0, 0xB2, 0xD1, 0x87, 0xD0, 0xBD };
+
+static const struct among a_33[23] =
+{
+{ 6, s_33_0, -1, 2, 0},
+{ 6, s_33_1, -1, 1, 0},
+{ 6, s_33_2, -1, 2, 0},
+{ 6, s_33_3, -1, 1, 0},
+{ 4, s_33_4, -1, 2, 0},
+{ 10, s_33_5, -1, 2, 0},
+{ 10, s_33_6, -1, 2, 0},
+{ 8, s_33_7, -1, 2, 0},
+{ 6, s_33_8, -1, 2, 0},
+{ 8, s_33_9, -1, 2, 0},
+{ 6, s_33_10, -1, 2, 0},
+{ 6, s_33_11, -1, 3, 0},
+{ 4, s_33_12, -1, 2, 0},
+{ 4, s_33_13, -1, 2, 0},
+{ 6, s_33_14, 13, 1, 0},
+{ 8, s_33_15, 14, 2, 0},
+{ 4, s_33_16, -1, 2, 0},
+{ 6, s_33_17, 16, 1, 0},
+{ 4, s_33_18, -1, 2, 0},
+{ 10, s_33_19, -1, 2, 0},
+{ 10, s_33_20, -1, 2, 0},
+{ 4, s_33_21, -1, 3, 0},
+{ 6, s_33_22, -1, 3, 0}
 };
 
 static const unsigned char g_vowel[] = { 33, 65, 8, 232, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 0, 0, 0, 0, 0, 2, 0, 2 };
 
-static const symbol s_0[] = { 0xD0, 0xBD };
-static const symbol s_1[] = { 0xD2, 0xA3 };
-static const symbol s_2[] = { 0xD2, 0xA3 };
-static const symbol s_3[] = { 0xD0, 0xB3 };
-static const symbol s_4[] = { 0xD0, 0xBA };
-static const symbol s_5[] = { 0xD0, 0xBD };
-static const symbol s_6[] = { 0xD2, 0xBB };
-static const symbol s_7[] = { 0xD1, 0x80 };
-static const symbol s_8[] = { 0xD0, 0xB0, 0xD1, 0x81 };
-static const symbol s_9[] = { 0xD3, 0x99, 0xD1, 0x81 };
-static const symbol s_10[] = { 0xD0, 0xBD };
-static const symbol s_11[] = { 0xD2, 0xA3 };
-static const symbol s_12[] = { 0xD1, 0x80 };
-static const symbol s_13[] = { 0xD0, 0xB4 };
-static const symbol s_14[] = { 0xD1, 0x81 };
+static const symbol s_0[] = { 0xD2, 0xA3 };
+static const symbol s_1[] = { 0xD0, 0xB3 };
+static const symbol s_2[] = { 0xD0, 0xBA };
+static const symbol s_3[] = { 0xD0, 0xBD };
+static const symbol s_4[] = { 0xD1, 0x80 };
+static const symbol s_5[] = { 0xD0, 0xB0, 0xD1, 0x81 };
+static const symbol s_6[] = { 0xD3, 0x99, 0xD1, 0x81 };
+static const symbol s_7[] = { 0xD0, 0xBD };
+static const symbol s_8[] = { 0xD2, 0xA3 };
+static const symbol s_9[] = { 0xD0, 0xBD };
+static const symbol s_10[] = { 0xD2, 0xA3 };
+static const symbol s_11[] = { 0xD1, 0x80 };
+static const symbol s_12[] = { 0xD0, 0xB4 };
+static const symbol s_13[] = { 0xD1, 0x81 };
 
-static int r_noun(struct SN_env * z) {
+static int r_noun_plural(struct SN_env * z) {
     int among_var;
     z->ket = z->c;
-    among_var = find_among_b(z, a_7, 35);
+    among_var = find_among_b(z, a_1, 16);
     if (!(among_var)) return 0;
     z->bra = z->c;
     switch (among_var) {
         case 1:
-            {   int ret = slice_from_s(z, 2, s_0);
-                if (ret < 0) return ret;
-            }
-            break;
-        case 2:
-            {   int ret = slice_from_s(z, 2, s_1);
-                if (ret < 0) return ret;
-            }
-            break;
-        case 3:
             {   int m_test1 = z->l - z->c;
-                if (in_grouping_b_U(z, g_vowel, 1072, 1257, 0)) return 0;
+                {   int ret = skip_b_utf8(z->p, z->c, z->lb, 3);
+                    if (ret < 0) return 0;
+                    z->c = ret;
+                }
                 z->c = z->l - m_test1;
             }
             {   int ret = slice_del(z);
                 if (ret < 0) return ret;
             }
-            {   int m_test2 = z->l - z->c;
-                if (!(find_among_b(z, a_0, 12))) return 0;
-                z->c = z->l - m_test2;
+            break;
+        case 2:
+            {   int ret = slice_from_s(z, 2, s_0);
+                if (ret < 0) return ret;
             }
-            z->ket = z->c;
-            {   int ret = skip_b_utf8(z->p, z->c, z->lb, 1);
-                if (ret < 0) return 0;
-                z->c = ret;
-            }
-            z->bra = z->c;
-            {   int ret = slice_del(z);
+            break;
+        case 3:
+            {   int ret = slice_from_s(z, 2, s_1);
                 if (ret < 0) return ret;
             }
             break;
         case 4:
-            {   int m_test3 = z->l - z->c;
-                {   int m4 = z->l - z->c; (void)m4;
-                    if (z->c - 1 <= z->lb || z->p[z->c - 1] != 133) goto lab0;
-                    if (!(find_among_b(z, a_4, 1))) goto lab0;
-                    return 0;
-                lab0:
-                    z->c = z->l - m4;
-                }
-                z->c = z->l - m_test3;
-            }
-            {   int ret = skip_b_utf8(z->p, z->c, z->lb, 2);
-                if (ret < 0) return 0;
-                z->c = ret;
-            }
-            {   int ret = slice_del(z);
+            {   int ret = slice_from_s(z, 2, s_2);
                 if (ret < 0) return ret;
             }
             break;
         case 5:
-            {   int ret = skip_b_utf8(z->p, z->c, z->lb, 2);
-                if (ret < 0) return 0;
-                z->c = ret;
-            }
             {   int ret = slice_del(z);
                 if (ret < 0) return ret;
             }
             break;
         case 6:
-            {   int m_test5 = z->l - z->c;
-                {   int m6 = z->l - z->c; (void)m6;
-                    if (z->c - 3 <= z->lb || (z->p[z->c - 1] != 131 && z->p[z->c - 1] != 175)) goto lab1;
-                    if (!(find_among_b(z, a_5, 8))) goto lab1;
-                    return 0;
-                lab1:
-                    z->c = z->l - m6;
+            {   int m_test2 = z->l - z->c;
+                {   int ret = skip_b_utf8(z->p, z->c, z->lb, 3);
+                    if (ret < 0) return 0;
+                    z->c = ret;
                 }
-                z->c = z->l - m_test5;
+                z->c = z->l - m_test2;
             }
             {   int ret = slice_del(z);
                 if (ret < 0) return ret;
             }
-            break;
-        case 7:
-            {   int m_test7 = z->l - z->c;
-                {   int m8 = z->l - z->c; (void)m8;
-                    if (in_grouping_b_U(z, g_vowel, 1072, 1257, 0)) return 0;
-                    z->c = z->l - m8;
-                    {   int ret = skip_b_utf8(z->p, z->c, z->lb, 3);
+            {   int m_test3 = z->l - z->c;
+                if (z->c - 1 <= z->lb || z->p[z->c - 1] != 135) return 0;
+                among_var = find_among_b(z, a_0, 3);
+                if (!(among_var)) return 0;
+                z->c = z->l - m_test3;
+            }
+            switch (among_var) {
+                case 1:
+                    z->ket = z->c;
+                    {   int ret = skip_b_utf8(z->p, z->c, z->lb, 2);
                         if (ret < 0) return 0;
                         z->c = ret;
                     }
-                }
-                z->c = z->l - m_test7;
-            }
-            {   int ret = slice_del(z);
-                if (ret < 0) return ret;
-            }
-            break;
-        case 8:
-            {   int m_test9 = z->l - z->c;
-                {   int m10 = z->l - z->c; (void)m10;
-                    if (in_grouping_b_U(z, g_vowel, 1072, 1257, 0)) return 0;
-                    z->c = z->l - m10;
-                    {   int ret = skip_b_utf8(z->p, z->c, z->lb, 3);
+                    z->bra = z->c;
+                    {   int ret = slice_del(z);
+                        if (ret < 0) return ret;
+                    }
+                    break;
+                case 2:
+                    z->ket = z->c;
+                    {   int ret = skip_b_utf8(z->p, z->c, z->lb, 1);
                         if (ret < 0) return 0;
                         z->c = ret;
                     }
-                }
-                z->c = z->l - m_test9;
-            }
-            {   int ret = slice_del(z);
-                if (ret < 0) return ret;
-            }
-            {   int m_test11 = z->l - z->c;
-                if (!(find_among_b(z, a_6, 12))) return 0;
-                z->c = z->l - m_test11;
-            }
-            z->ket = z->c;
-            {   int ret = skip_b_utf8(z->p, z->c, z->lb, 1);
-                if (ret < 0) return 0;
-                z->c = ret;
-            }
-            z->bra = z->c;
-            {   int ret = slice_del(z);
-                if (ret < 0) return ret;
-            }
-            break;
-    }
-    return 1;
-}
-
-static int r_noun_plural(struct SN_env * z) {
-    int among_var;
-    z->ket = z->c;
-    among_var = find_among_b(z, a_8, 12);
-    if (!(among_var)) return 0;
-    z->bra = z->c;
-    switch (among_var) {
-        case 1:
-            {   int ret = slice_from_s(z, 2, s_2);
-                if (ret < 0) return ret;
-            }
-            break;
-        case 2:
-            {   int ret = slice_from_s(z, 2, s_3);
-                if (ret < 0) return ret;
-            }
-            break;
-        case 3:
-            {   int ret = slice_from_s(z, 2, s_4);
-                if (ret < 0) return ret;
-            }
-            break;
-        case 4:
-            {   int ret = slice_del(z);
-                if (ret < 0) return ret;
+                    z->bra = z->c;
+                    {   int ret = slice_del(z);
+                        if (ret < 0) return ret;
+                    }
+                    break;
             }
             break;
     }
@@ -800,7 +853,7 @@ static int r_noun_plural(struct SN_env * z) {
 static int r_noun_possessive(struct SN_env * z) {
     int among_var;
     z->ket = z->c;
-    among_var = find_among_b(z, a_10, 5);
+    among_var = find_among_b(z, a_4, 5);
     if (!(among_var)) return 0;
     z->bra = z->c;
     switch (among_var) {
@@ -808,13 +861,27 @@ static int r_noun_possessive(struct SN_env * z) {
             {   int m_test1 = z->l - z->c;
                 {   int m2 = z->l - z->c; (void)m2;
                     if (z->c - 3 <= z->lb || z->p[z->c - 1] != 189) goto lab0;
-                    if (!(find_among_b(z, a_9, 4))) goto lab0;
+                    if (!(find_among_b(z, a_2, 4))) goto lab0;
                     return 0;
                 lab0:
                     z->c = z->l - m2;
                 }
                 z->c = z->l - m_test1;
             }
+            {   int ret = slice_del(z);
+                if (ret < 0) return ret;
+            }
+            {   int m_test3 = z->l - z->c;
+                if (z->c - 1 <= z->lb || (z->p[z->c - 1] != 139 && z->p[z->c - 1] != 184)) return 0;
+                if (!(find_among_b(z, a_3, 2))) return 0;
+                z->c = z->l - m_test3;
+            }
+            z->ket = z->c;
+            {   int ret = skip_b_utf8(z->p, z->c, z->lb, 1);
+                if (ret < 0) return 0;
+                z->c = ret;
+            }
+            z->bra = z->c;
             {   int ret = slice_del(z);
                 if (ret < 0) return ret;
             }
@@ -832,13 +899,13 @@ static int r_noun_impersonal_possessive(struct SN_env * z) {
     int among_var;
     z->ket = z->c;
     if (z->c - 3 <= z->lb || (z->p[z->c - 1] != 140 && z->p[z->c - 1] != 189)) return 0;
-    among_var = find_among_b(z, a_13, 6);
+    among_var = find_among_b(z, a_8, 7);
     if (!(among_var)) return 0;
     z->bra = z->c;
     switch (among_var) {
         case 1:
             {   int m_test1 = z->l - z->c;
-                among_var = find_among_b(z, a_11, 4);
+                among_var = find_among_b(z, a_5, 4);
                 if (!(among_var)) return 0;
                 z->c = z->l - m_test1;
             }
@@ -849,19 +916,34 @@ static int r_noun_impersonal_possessive(struct SN_env * z) {
                     }
                     break;
                 case 2:
-                    {   int ret = slice_from_s(z, 2, s_5);
+                    {   int ret = slice_from_s(z, 2, s_3);
                         if (ret < 0) return ret;
                     }
                     break;
             }
             break;
         case 2:
+            {   int m_test2 = z->l - z->c;
+                {   int ret = skip_b_utf8(z->p, z->c, z->lb, 3);
+                    if (ret < 0) return 0;
+                    z->c = ret;
+                }
+                z->c = z->l - m_test2;
+            }
             {   int ret = slice_del(z);
                 if (ret < 0) return ret;
             }
-            {   int m_test2 = z->l - z->c;
-                if (!(eq_s_b(z, 2, s_6))) return 0;
-                z->c = z->l - m_test2;
+            {   int m_test3 = z->l - z->c;
+                if (z->c - 1 <= z->lb || z->p[z->c - 1] != 187) return 0;
+                if (!(find_among_b(z, a_6, 1))) return 0;
+                z->c = z->l - m_test3;
+            }
+            {   int m_test4 = z->l - z->c;
+                {   int ret = skip_b_utf8(z->p, z->c, z->lb, 4);
+                    if (ret < 0) return 0;
+                    z->c = ret;
+                }
+                z->c = z->l - m_test4;
             }
             z->ket = z->c;
             {   int ret = skip_b_utf8(z->p, z->c, z->lb, 1);
@@ -874,10 +956,10 @@ static int r_noun_impersonal_possessive(struct SN_env * z) {
             }
             break;
         case 3:
-            {   int m_test3 = z->l - z->c;
-                among_var = find_among_b(z, a_12, 6);
+            {   int m_test5 = z->l - z->c;
+                among_var = find_among_b(z, a_7, 6);
                 if (!(among_var)) return 0;
-                z->c = z->l - m_test3;
+                z->c = z->l - m_test5;
             }
             switch (among_var) {
                 case 1:
@@ -886,19 +968,19 @@ static int r_noun_impersonal_possessive(struct SN_env * z) {
                     }
                     break;
                 case 2:
-                    {   int ret = slice_from_s(z, 2, s_7);
+                    {   int ret = slice_from_s(z, 2, s_4);
                         if (ret < 0) return ret;
                     }
                     break;
             }
             break;
         case 4:
-            {   int ret = slice_from_s(z, 4, s_8);
+            {   int ret = slice_from_s(z, 4, s_5);
                 if (ret < 0) return ret;
             }
             break;
         case 5:
-            {   int ret = slice_from_s(z, 4, s_9);
+            {   int ret = slice_from_s(z, 4, s_6);
                 if (ret < 0) return ret;
             }
             break;
@@ -909,17 +991,17 @@ static int r_noun_impersonal_possessive(struct SN_env * z) {
 static int r_noun_double_declination(struct SN_env * z) {
     int among_var;
     z->ket = z->c;
-    among_var = find_among_b(z, a_15, 6);
+    among_var = find_among_b(z, a_10, 6);
     if (!(among_var)) return 0;
     z->bra = z->c;
     switch (among_var) {
         case 1:
-            {   int ret = slice_from_s(z, 2, s_10);
+            {   int ret = slice_from_s(z, 2, s_7);
                 if (ret < 0) return ret;
             }
             break;
         case 2:
-            {   int ret = slice_from_s(z, 2, s_11);
+            {   int ret = slice_from_s(z, 2, s_8);
                 if (ret < 0) return ret;
             }
             break;
@@ -932,7 +1014,7 @@ static int r_noun_double_declination(struct SN_env * z) {
                 if (ret < 0) return ret;
             }
             {   int m_test2 = z->l - z->c;
-                if (!(find_among_b(z, a_14, 12))) return 0;
+                if (!(find_among_b(z, a_9, 12))) return 0;
                 z->c = z->l - m_test2;
             }
             z->ket = z->c;
@@ -946,7 +1028,370 @@ static int r_noun_double_declination(struct SN_env * z) {
             }
             break;
         case 4:
+            {   int m_test3 = z->l - z->c;
+                {   int ret = skip_b_utf8(z->p, z->c, z->lb, 2);
+                    if (ret < 0) return 0;
+                    z->c = ret;
+                }
+                z->c = z->l - m_test3;
+            }
+            {   int ret = slice_del(z);
+                if (ret < 0) return ret;
+            }
+            break;
+    }
+    return 1;
+}
+
+static int r_noun(struct SN_env * z) {
+    int among_var;
+    {   int m1 = z->l - z->c; (void)m1;
+        {   int m2 = z->l - z->c; (void)m2;
+            {   int ret = r_noun_impersonal_possessive(z);
+                if (ret == 0) goto lab2;
+                if (ret < 0) return ret;
+            }
+            goto lab1;
+        lab2:
+            z->c = z->l - m2;
+            {   int ret = r_noun_possessive(z);
+                if (ret == 0) goto lab0;
+                if (ret < 0) return ret;
+            }
+        }
+    lab1:
+    lab0:
+        z->c = z->l - m1;
+    }
+    z->ket = z->c;
+    among_var = find_among_b(z, a_18, 35);
+    if (!(among_var)) return 0;
+    z->bra = z->c;
+    switch (among_var) {
+        case 1:
+            {   int ret = slice_from_s(z, 2, s_9);
+                if (ret < 0) return ret;
+            }
+            break;
+        case 2:
+            {   int ret = slice_from_s(z, 2, s_10);
+                if (ret < 0) return ret;
+            }
+            break;
+        case 3:
+            {   int m_test3 = z->l - z->c;
+                if (in_grouping_b_U(z, g_vowel, 1072, 1257, 0)) return 0;
+                z->c = z->l - m_test3;
+            }
+            {   int m_test4 = z->l - z->c;
+                {   int ret = skip_b_utf8(z->p, z->c, z->lb, 3);
+                    if (ret < 0) return 0;
+                    z->c = ret;
+                }
+                z->c = z->l - m_test4;
+            }
+            {   int ret = slice_del(z);
+                if (ret < 0) return ret;
+            }
+            {   int m_test5 = z->l - z->c;
+                if (!(find_among_b(z, a_11, 12))) return 0;
+                z->c = z->l - m_test5;
+            }
+            {   int m_test6 = z->l - z->c;
+                {   int ret = skip_b_utf8(z->p, z->c, z->lb, 2);
+                    if (ret < 0) return 0;
+                    z->c = ret;
+                }
+                z->c = z->l - m_test6;
+            }
+            z->ket = z->c;
+            {   int ret = skip_b_utf8(z->p, z->c, z->lb, 1);
+                if (ret < 0) return 0;
+                z->c = ret;
+            }
+            z->bra = z->c;
+            {   int ret = slice_del(z);
+                if (ret < 0) return ret;
+            }
+            break;
+        case 4:
+            {   int m_test7 = z->l - z->c;
+                {   int ret = skip_b_utf8(z->p, z->c, z->lb, 2);
+                    if (ret < 0) return 0;
+                    z->c = ret;
+                }
+                z->c = z->l - m_test7;
+            }
+            {   int ret = slice_del(z);
+                if (ret < 0) return ret;
+            }
+            {   int m_test8 = z->l - z->c;
+                if (!(find_among_b(z, a_12, 12))) return 0;
+                z->c = z->l - m_test8;
+            }
+            {   int m_test9 = z->l - z->c;
+                {   int ret = skip_b_utf8(z->p, z->c, z->lb, 2);
+                    if (ret < 0) return 0;
+                    z->c = ret;
+                }
+                z->c = z->l - m_test9;
+            }
+            z->ket = z->c;
+            {   int ret = skip_b_utf8(z->p, z->c, z->lb, 1);
+                if (ret < 0) return 0;
+                z->c = ret;
+            }
+            z->bra = z->c;
+            {   int ret = slice_del(z);
+                if (ret < 0) return ret;
+            }
+            break;
+        case 5:
+            {   int m_test10 = z->l - z->c;
+                if (in_grouping_b_U(z, g_vowel, 1072, 1257, 0)) return 0;
+                z->c = z->l - m_test10;
+            }
+            {   int ret = slice_del(z);
+                if (ret < 0) return ret;
+            }
+            {   int m_test11 = z->l - z->c;
+                if (!(find_among_b(z, a_13, 12))) return 0;
+                z->c = z->l - m_test11;
+            }
+            z->ket = z->c;
+            {   int ret = skip_b_utf8(z->p, z->c, z->lb, 1);
+                if (ret < 0) return 0;
+                z->c = ret;
+            }
+            z->bra = z->c;
+            {   int ret = slice_del(z);
+                if (ret < 0) return ret;
+            }
+            break;
+        case 6:
+            {   int m_test12 = z->l - z->c;
+                {   int m13 = z->l - z->c; (void)m13;
+                    if (z->c - 1 <= z->lb || z->p[z->c - 1] != 133) goto lab3;
+                    if (!(find_among_b(z, a_15, 1))) goto lab3;
+                    return 0;
+                lab3:
+                    z->c = z->l - m13;
+                }
+                z->c = z->l - m_test12;
+            }
+            {   int ret = skip_b_utf8(z->p, z->c, z->lb, 3);
+                if (ret < 0) return 0;
+                z->c = ret;
+            }
+            {   int ret = slice_del(z);
+                if (ret < 0) return ret;
+            }
+            break;
+        case 7:
+            {   int ret = skip_b_utf8(z->p, z->c, z->lb, 3);
+                if (ret < 0) return 0;
+                z->c = ret;
+            }
+            {   int ret = slice_del(z);
+                if (ret < 0) return ret;
+            }
+            break;
+        case 8:
+            {   int m_test14 = z->l - z->c;
+                {   int m15 = z->l - z->c; (void)m15;
+                    if (z->c - 3 <= z->lb || (z->p[z->c - 1] != 131 && z->p[z->c - 1] != 175)) goto lab4;
+                    if (!(find_among_b(z, a_16, 12))) goto lab4;
+                    return 0;
+                lab4:
+                    z->c = z->l - m15;
+                }
+                z->c = z->l - m_test14;
+            }
+            {   int ret = skip_b_utf8(z->p, z->c, z->lb, 3);
+                if (ret < 0) return 0;
+                z->c = ret;
+            }
+            {   int ret = slice_del(z);
+                if (ret < 0) return ret;
+            }
+            break;
+        case 9:
+            {   int m_test16 = z->l - z->c;
+                {   int m17 = z->l - z->c; (void)m17;
+                    if (in_grouping_b_U(z, g_vowel, 1072, 1257, 0)) return 0;
+                    z->c = z->l - m17;
+                    {   int ret = skip_b_utf8(z->p, z->c, z->lb, 3);
+                        if (ret < 0) return 0;
+                        z->c = ret;
+                    }
+                }
+                z->c = z->l - m_test16;
+            }
+            {   int ret = slice_del(z);
+                if (ret < 0) return ret;
+            }
+            break;
+        case 10:
+            {   int m_test18 = z->l - z->c;
+                {   int m19 = z->l - z->c; (void)m19;
+                    if (in_grouping_b_U(z, g_vowel, 1072, 1257, 0)) return 0;
+                    z->c = z->l - m19;
+                    {   int m_test20 = z->l - z->c;
+                        {   int ret = skip_b_utf8(z->p, z->c, z->lb, 3);
+                            if (ret < 0) return 0;
+                            z->c = ret;
+                        }
+                        z->c = z->l - m_test20;
+                    }
+                }
+                z->c = z->l - m_test18;
+            }
+            {   int ret = slice_del(z);
+                if (ret < 0) return ret;
+            }
+            {   int m_test21 = z->l - z->c;
+                if (!(find_among_b(z, a_17, 12))) return 0;
+                z->c = z->l - m_test21;
+            }
+            z->ket = z->c;
+            {   int ret = skip_b_utf8(z->p, z->c, z->lb, 1);
+                if (ret < 0) return 0;
+                z->c = ret;
+            }
+            z->bra = z->c;
+            {   int ret = slice_del(z);
+                if (ret < 0) return ret;
+            }
+            break;
+    }
+    return 1;
+}
+
+static int r_deverbative(struct SN_env * z) {
+    int among_var;
+    z->ket = z->c;
+    among_var = find_among_b(z, a_21, 7);
+    if (!(among_var)) return 0;
+    z->bra = z->c;
+    switch (among_var) {
+        case 1:
+            {   int m_test1 = z->l - z->c;
+                {   int ret = skip_b_utf8(z->p, z->c, z->lb, 3);
+                    if (ret < 0) return 0;
+                    z->c = ret;
+                }
+                z->c = z->l - m_test1;
+            }
+            {   int ret = slice_del(z);
+                if (ret < 0) return ret;
+            }
+            {   int m_test2 = z->l - z->c;
+                if (z->c - 1 <= z->lb || (z->p[z->c - 1] != 153 && z->p[z->c - 1] != 176)) return 0;
+                if (!(find_among_b(z, a_19, 2))) return 0;
+                z->c = z->l - m_test2;
+            }
+            z->ket = z->c;
+            {   int ret = skip_b_utf8(z->p, z->c, z->lb, 1);
+                if (ret < 0) return 0;
+                z->c = ret;
+            }
+            z->bra = z->c;
+            {   int ret = slice_del(z);
+                if (ret < 0) return ret;
+            }
+            break;
+        case 2:
+            {   int m_test3 = z->l - z->c;
+                {   int ret = skip_b_utf8(z->p, z->c, z->lb, 3);
+                    if (ret < 0) return 0;
+                    z->c = ret;
+                }
+                z->c = z->l - m_test3;
+            }
+            {   int ret = slice_del(z);
+                if (ret < 0) return ret;
+            }
+            break;
+        case 3:
+            {   int m_test4 = z->l - z->c;
+                {   int ret = skip_b_utf8(z->p, z->c, z->lb, 3);
+                    if (ret < 0) return 0;
+                    z->c = ret;
+                }
+                z->c = z->l - m_test4;
+            }
+            {   int ret = slice_del(z);
+                if (ret < 0) return ret;
+            }
+            {   int m_test5 = z->l - z->c;
+                if (z->c - 3 <= z->lb || z->p[z->c - 1] != 187) return 0;
+                if (!(find_among_b(z, a_20, 1))) return 0;
+                z->c = z->l - m_test5;
+            }
+            z->ket = z->c;
             {   int ret = skip_b_utf8(z->p, z->c, z->lb, 2);
+                if (ret < 0) return 0;
+                z->c = ret;
+            }
+            z->bra = z->c;
+            {   int ret = slice_del(z);
+                if (ret < 0) return ret;
+            }
+            break;
+    }
+    return 1;
+}
+
+static int r_verb_particles(struct SN_env * z) {
+    int among_var;
+    z->ket = z->c;
+    among_var = find_among_b(z, a_25, 6);
+    if (!(among_var)) return 0;
+    z->bra = z->c;
+    switch (among_var) {
+        case 1:
+            {   int ret = slice_del(z);
+                if (ret < 0) return ret;
+            }
+            {   int m_test1 = z->l - z->c;
+                if (!(find_among_b(z, a_22, 3))) return 0;
+                z->c = z->l - m_test1;
+            }
+            z->ket = z->c;
+            {   int ret = skip_b_utf8(z->p, z->c, z->lb, 1);
+                if (ret < 0) return 0;
+                z->c = ret;
+            }
+            z->bra = z->c;
+            {   int ret = slice_del(z);
+                if (ret < 0) return ret;
+            }
+            break;
+        case 2:
+            {   int ret = slice_del(z);
+                if (ret < 0) return ret;
+            }
+            {   int m_test2 = z->l - z->c;
+                if (!(find_among_b(z, a_24, 3))) return 0;
+                z->c = z->l - m_test2;
+            }
+            z->ket = z->c;
+            {   int ret = skip_b_utf8(z->p, z->c, z->lb, 1);
+                if (ret < 0) return 0;
+                z->c = ret;
+            }
+            z->bra = z->c;
+            {   int ret = slice_del(z);
+                if (ret < 0) return ret;
+            }
+            break;
+        case 3:
+            {   int ret = slice_del(z);
+                if (ret < 0) return ret;
+            }
+            break;
+        case 4:
+            {   int ret = skip_b_utf8(z->p, z->c, z->lb, 3);
                 if (ret < 0) return 0;
                 z->c = ret;
             }
@@ -961,18 +1406,25 @@ static int r_noun_double_declination(struct SN_env * z) {
 static int r_verb_number_person(struct SN_env * z) {
     int among_var;
     z->ket = z->c;
-    among_var = find_among_b(z, a_17, 4);
+    among_var = find_among_b(z, a_27, 4);
     if (!(among_var)) return 0;
     z->bra = z->c;
     switch (among_var) {
         case 1:
+            {   int m_test1 = z->l - z->c;
+                {   int ret = skip_b_utf8(z->p, z->c, z->lb, 3);
+                    if (ret < 0) return 0;
+                    z->c = ret;
+                }
+                z->c = z->l - m_test1;
+            }
             {   int ret = slice_del(z);
                 if (ret < 0) return ret;
             }
-            {   int m_test1 = z->l - z->c;
+            {   int m_test2 = z->l - z->c;
                 if (z->c - 1 <= z->lb || (z->p[z->c - 1] != 131 && z->p[z->c - 1] != 175)) return 0;
-                if (!(find_among_b(z, a_16, 2))) return 0;
-                z->c = z->l - m_test1;
+                if (!(find_among_b(z, a_26, 2))) return 0;
+                z->c = z->l - m_test2;
             }
             z->ket = z->c;
             {   int ret = skip_b_utf8(z->p, z->c, z->lb, 1);
@@ -996,33 +1448,30 @@ static int r_verb_number_person(struct SN_env * z) {
 static int r_verb_tense_mood(struct SN_env * z) {
     int among_var;
     z->ket = z->c;
-    among_var = find_among_b(z, a_21, 28);
+    among_var = find_among_b(z, a_30, 25);
     if (!(among_var)) return 0;
     z->bra = z->c;
     switch (among_var) {
         case 1:
+            {   int ret = slice_del(z);
+                if (ret < 0) return ret;
+            }
+            break;
+        case 2:
             {   int m_test1 = z->l - z->c;
                 {   int m2 = z->l - z->c; (void)m2;
                     if (z->c - 1 <= z->lb || z->p[z->c - 1] != 133) goto lab0;
-                    if (!(find_among_b(z, a_18, 1))) goto lab0;
+                    if (!(find_among_b(z, a_28, 1))) goto lab0;
                     return 0;
                 lab0:
                     z->c = z->l - m2;
                 }
                 z->c = z->l - m_test1;
             }
-            {   int ret = slice_del(z);
-                if (ret < 0) return ret;
-            }
-            break;
-        case 2:
             {   int m_test3 = z->l - z->c;
-                {   int m4 = z->l - z->c; (void)m4;
-                    if (z->c - 5 <= z->lb || z->p[z->c - 1] != 128) goto lab1;
-                    if (!(find_among_b(z, a_19, 2))) goto lab1;
-                    return 0;
-                lab1:
-                    z->c = z->l - m4;
+                {   int ret = skip_b_utf8(z->p, z->c, z->lb, 3);
+                    if (ret < 0) return 0;
+                    z->c = ret;
                 }
                 z->c = z->l - m_test3;
             }
@@ -1031,21 +1480,28 @@ static int r_verb_tense_mood(struct SN_env * z) {
             }
             break;
         case 3:
-            {   int m_test5 = z->l - z->c;
-                {   int m6 = z->l - z->c; (void)m6;
-                    if (z->c - 1 <= z->lb || z->p[z->c - 1] != 180) goto lab2;
-                    if (!(find_among_b(z, a_20, 1))) goto lab2;
+            {   int m_test4 = z->l - z->c;
+                {   int m5 = z->l - z->c; (void)m5;
+                    if (z->c - 1 <= z->lb || (z->p[z->c - 1] != 153 && z->p[z->c - 1] != 176)) goto lab1;
+                    if (!(find_among_b(z, a_29, 2))) goto lab1;
                     return 0;
-                lab2:
-                    z->c = z->l - m6;
+                lab1:
+                    z->c = z->l - m5;
                 }
-                z->c = z->l - m_test5;
+                z->c = z->l - m_test4;
             }
             {   int ret = slice_del(z);
                 if (ret < 0) return ret;
             }
             break;
         case 4:
+            {   int m_test6 = z->l - z->c;
+                {   int ret = skip_b_utf8(z->p, z->c, z->lb, 2);
+                    if (ret < 0) return 0;
+                    z->c = ret;
+                }
+                z->c = z->l - m_test6;
+            }
             {   int ret = slice_del(z);
                 if (ret < 0) return ret;
             }
@@ -1056,20 +1512,99 @@ static int r_verb_tense_mood(struct SN_env * z) {
 
 static int r_verb_stem(struct SN_env * z) {
     int among_var;
+    {   int m1 = z->l - z->c; (void)m1;
+        {   int ret = r_verb_particles(z);
+            if (ret == 0) { z->c = z->l - m1; goto lab0; }
+            if (ret < 0) return ret;
+        }
+    lab0:
+        ;
+    }
+    {   int m2 = z->l - z->c; (void)m2;
+        {   int ret = r_verb_number_person(z);
+            if (ret == 0) { z->c = z->l - m2; goto lab1; }
+            if (ret < 0) return ret;
+        }
+    lab1:
+        ;
+    }
+    {   int m3 = z->l - z->c; (void)m3;
+        {   int ret = r_verb_tense_mood(z);
+            if (ret == 0) { z->c = z->l - m3; goto lab2; }
+            if (ret < 0) return ret;
+        }
+    lab2:
+        ;
+    }
     z->ket = z->c;
-    among_var = find_among_b(z, a_23, 16);
+    among_var = find_among_b(z, a_32, 15);
+    if (!(among_var)) return 0;
+    z->bra = z->c;
+    switch (among_var) {
+        case 1:
+            {   int m_test4 = z->l - z->c;
+                {   int ret = skip_b_utf8(z->p, z->c, z->lb, 2);
+                    if (ret < 0) return 0;
+                    z->c = ret;
+                }
+                z->c = z->l - m_test4;
+            }
+            {   int ret = slice_del(z);
+                if (ret < 0) return ret;
+            }
+            {   int m_test5 = z->l - z->c;
+                if (z->c - 1 <= z->lb || (z->p[z->c - 1] != 153 && z->p[z->c - 1] != 176)) return 0;
+                if (!(find_among_b(z, a_31, 2))) return 0;
+                z->c = z->l - m_test5;
+            }
+            z->ket = z->c;
+            {   int ret = skip_b_utf8(z->p, z->c, z->lb, 1);
+                if (ret < 0) return 0;
+                z->c = ret;
+            }
+            z->bra = z->c;
+            {   int ret = slice_del(z);
+                if (ret < 0) return ret;
+            }
+            break;
+        case 2:
+            {   int ret = skip_b_utf8(z->p, z->c, z->lb, 2);
+                if (ret < 0) return 0;
+                z->c = ret;
+            }
+            {   int ret = slice_del(z);
+                if (ret < 0) return ret;
+            }
+            break;
+        case 3:
+            {   int ret = slice_from_s(z, 2, s_11);
+                if (ret < 0) return ret;
+            }
+            break;
+        case 4:
+            {   int ret = slice_from_s(z, 2, s_12);
+                if (ret < 0) return ret;
+            }
+            break;
+        case 5:
+            {   int ret = slice_from_s(z, 2, s_13);
+                if (ret < 0) return ret;
+            }
+            break;
+    }
+    return 1;
+}
+
+static int r_gerund(struct SN_env * z) {
+    int among_var;
+    z->ket = z->c;
+    among_var = find_among_b(z, a_33, 23);
     if (!(among_var)) return 0;
     z->bra = z->c;
     switch (among_var) {
         case 1:
             {   int m_test1 = z->l - z->c;
-                {   int m2 = z->l - z->c; (void)m2;
-                    if (z->c - 3 <= z->lb || (z->p[z->c - 1] != 128 && z->p[z->c - 1] != 187)) goto lab0;
-                    if (!(find_among_b(z, a_22, 3))) goto lab0;
-                    return 0;
-                lab0:
-                    z->c = z->l - m2;
-                }
+                if (in_grouping_b_U(z, g_vowel, 1072, 1257, 0)) return 0;
                 z->c = z->l - m_test1;
             }
             {   int ret = slice_del(z);
@@ -1082,30 +1617,19 @@ static int r_verb_stem(struct SN_env * z) {
             }
             break;
         case 3:
-            {   int ret = slice_from_s(z, 2, s_12);
+            {   int m_test2 = z->l - z->c;
+                {   int m3 = z->l - z->c; (void)m3;
+                    if (in_grouping_b_U(z, g_vowel, 1072, 1257, 0)) goto lab0;
+                    return 0;
+                lab0:
+                    z->c = z->l - m3;
+                }
+                z->c = z->l - m_test2;
+            }
+            {   int ret = slice_del(z);
                 if (ret < 0) return ret;
             }
             break;
-        case 4:
-            {   int ret = slice_from_s(z, 2, s_13);
-                if (ret < 0) return ret;
-            }
-            break;
-        case 5:
-            {   int ret = slice_from_s(z, 2, s_14);
-                if (ret < 0) return ret;
-            }
-            break;
-    }
-    return 1;
-}
-
-static int r_gerund(struct SN_env * z) {
-    z->ket = z->c;
-    if (!(find_among_b(z, a_24, 15))) return 0;
-    z->bra = z->c;
-    {   int ret = slice_del(z);
-        if (ret < 0) return ret;
     }
     return 1;
 }
@@ -1114,59 +1638,45 @@ extern int kalmyk_UTF_8_stem(struct SN_env * z) {
     z->lb = z->c; z->c = z->l;
 
     {   int m1 = z->l - z->c; (void)m1;
-        {   int ret = r_noun_possessive(z);
-            if (ret < 0) return ret;
+        {   int m2 = z->l - z->c; (void)m2;
+            {   int ret = r_gerund(z);
+                if (ret < 0) return ret;
+            }
+            z->c = z->l - m2;
         }
-        z->c = z->l - m1;
-    }
-    {   int m2 = z->l - z->c; (void)m2;
-        {   int ret = r_noun_impersonal_possessive(z);
-            if (ret < 0) return ret;
-        }
-        z->c = z->l - m2;
-    }
-    {   int m3 = z->l - z->c; (void)m3;
-        {   int ret = r_noun(z);
-            if (ret < 0) return ret;
-        }
-        z->c = z->l - m3;
-    }
-    {   int m4 = z->l - z->c; (void)m4;
-        {   int ret = r_noun_double_declination(z);
-            if (ret < 0) return ret;
-        }
-        z->c = z->l - m4;
-    }
-    {   int m5 = z->l - z->c; (void)m5;
-        {   int ret = r_noun_plural(z);
-            if (ret < 0) return ret;
-        }
-        z->c = z->l - m5;
-    }
-    {   int m6 = z->l - z->c; (void)m6;
-        {   int ret = r_verb_number_person(z);
-            if (ret < 0) return ret;
-        }
-        z->c = z->l - m6;
-    }
-    {   int m7 = z->l - z->c; (void)m7;
-        {   int ret = r_verb_tense_mood(z);
-            if (ret < 0) return ret;
-        }
-        z->c = z->l - m7;
-    }
-    {   int m8 = z->l - z->c; (void)m8;
         {   int ret = r_verb_stem(z);
+            if (ret == 0) goto lab1;
             if (ret < 0) return ret;
         }
-        z->c = z->l - m8;
-    }
-    {   int m9 = z->l - z->c; (void)m9;
-        {   int ret = r_gerund(z);
-            if (ret < 0) return ret;
+        goto lab0;
+    lab1:
+        z->c = z->l - m1;
+        {   int m3 = z->l - z->c; (void)m3;
+            {   int ret = r_noun(z);
+                if (ret < 0) return ret;
+            }
+            z->c = z->l - m3;
         }
-        z->c = z->l - m9;
+        {   int m4 = z->l - z->c; (void)m4;
+            {   int ret = r_noun_double_declination(z);
+                if (ret < 0) return ret;
+            }
+            z->c = z->l - m4;
+        }
+        {   int m5 = z->l - z->c; (void)m5;
+            {   int ret = r_noun_plural(z);
+                if (ret < 0) return ret;
+            }
+            z->c = z->l - m5;
+        }
+        {   int m6 = z->l - z->c; (void)m6;
+            {   int ret = r_deverbative(z);
+                if (ret < 0) return ret;
+            }
+            z->c = z->l - m6;
+        }
     }
+lab0:
     z->c = z->lb;
     return 1;
 }
